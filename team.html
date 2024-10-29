@@ -271,7 +271,7 @@
         font-size: 40px;
     }
 
-      /*방명록 게시글 관련 */
+    /*방명록 게시글 관련 */
     .guestBook {
         display: flex;
         flex-direction: column;
@@ -287,16 +287,20 @@
         text-align: left;
         gap: 2rem;
         margin-right: 15px;
-        
+
     }
 
     .something {
-        height: 30px;
-        width: 100%;
-        box-shadow: 0px 0px 3px 0px blue;
+        /* 한 줄 차지하여 옆에 붙지 않게 설정 */
+        display: block;
+        /* 박스가 부모 요소를 넘지 않도록 설정 */
+        max-width: 100%;
+        /* 여백 추가 */
+        padding: 8px 12px;
+        border: 1px solid blue;
         border-radius: 5px;
         background-color: white;
-        grid-template-columns: minmax(100px, max-content) 1fr;
+        font-size: 16px;
 
     }
 </style>
@@ -446,11 +450,11 @@
             <button id="postingbtn" type="button" class="btn btn-outline-primary">제출하기</button>
         </div>
 
-    <div class="mycards">
-        <div id="visitcard">
+        <div class="mycards">
+            <div id="visitcard">
 
+            </div>
         </div>
-    </div>
 
 
 
