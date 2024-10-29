@@ -34,6 +34,31 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // 멤버 소개 불러와서 카드 붙이기
+    let memberDocs = await getDocs(collection(db, "teaminfo"));
+
+    memberDocs.forEach((doc) => {
+        let row = doc.data();
+        let name = row['name'];
+        let mbti = row['mbti'];
+        let image = row['img'];
+        let goal = row['goal'];
+        let github = row['github'];
+        let blog = row['blog'];
+
+        let temp_html = `            
+            <div class="col">
+                <div class="card">
+                    <img src="${image}" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">${name}</h5>
+                        <button id="moreBtn1" type="button" class="btn btn-outline-dark">더보기</button>
+                    </div>
+                </div>
+            </div>`;
+        $('#memberCards').append(temp_html);
+    });
+
 
     // 버튼으로 멤버소개 카드 여닫기
     $("#moreBtn1").click(async function () {
@@ -154,7 +179,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-size: 40px ;
+        font-size: 40px;
     }
 </style>
 
@@ -166,8 +191,8 @@
         <P id="teamDetail"> 팀에 대한 자세한 설명 </P>
     </div>
     <!-- 멤버 간단한 카드  -->
-    <div class="row row-cols-1 row-cols-md-4 g-4">
-        <div class="col">
+    <div id="memberCards" class="row row-cols-1 row-cols-md-4 g-4">
+        <!-- <div class="col">
             <div class="card">
                 <img src="..." class="card-img-top" alt="...">
                 <div class="card-body">
@@ -210,8 +235,9 @@
                     <button id="moreBtn4" type="button" class="btn btn-outline-dark">더보기</button>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
+
     <div>
         <!-- 멤버 좀더 자세한  카드  -->
         <div id="memberCard1" class="card mb-3">
@@ -280,7 +306,7 @@
     <div class="visit">
 
         <div class="guest">
-           <b> 방명록을 작성해 주세요 </b>
+            <b> 방명록을 작성해 주세요 </b>
         </div>
         <div>
             <input type="text" id="something" placeholder="내용">
