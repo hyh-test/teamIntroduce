@@ -34,23 +34,90 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // 멤버 소개 불러와서 카드 붙이기
+    let memberDocs = await getDocs(collection(db, "teaminfo"));
 
-    // 버튼으로 멤버소개 카드 여닫기
+    let idx = 1; // id를 입력하기 위한 인덱스, 배열이 아니기 때문에 직접 관리
+
+    memberDocs.forEach((doc) => {
+        let row = doc.data();
+        let name = row['name'];
+        let mbti = row['mbti'];
+        let image = row['img'];
+        let goal = row['goal'];
+        let github = row['github'];
+        let blog = row['blog'];
+
+
+        let moreBtnId = 'moreBtn' + idx;
+        let detailBtnId = 'memberCard' + idx;
+
+        //간단한 멤버 소개 생성
+        let simple_html = `            
+            <div class="col">
+                <div class="card">
+                    <img src="${image}" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">${name}</h5>
+                        <button id="${moreBtnId}" type="button" class="btn btn-outline-dark">더보기</button>
+                    </div>
+                </div>
+            </div>`;
+
+        //자세한 멤버 소개 생성
+        let detail_html = `            
+            <div id="${detailBtnId}" class="card mb-3" style="display:none">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="${image}" class="img-fluid rounded-start">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">${name}</h5>
+                            <p class="card-text">
+                                mbti : ${mbti}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+        $('#memberCards').append(simple_html);
+        $('#datailCards').append(detail_html);
+
+        idx += 1;
+
+        $("#", moreBtnId).click(async function () {
+
+            // 모든 카드 닫기
+            $('#memberCard2, #memberCard3, #memberCard4').hide();
+            // 클릭한 카드만 토글
+            $('#memberCard1').toggle();
+        });
+    });
+
+    // 버튼으로 멤버소개 카드 여닫기, 해당 카드만 열고 다른 카드는 닫기
     $("#moreBtn1").click(async function () {
-        $('#memberCard1').toggle()
-    })
+        // 모든 카드 닫기
+        $('#memberCard2, #memberCard3, #memberCard4').hide();
+        // 클릭한 카드만 토글
+        $('#memberCard1').toggle();
+    });
 
     $("#moreBtn2").click(async function () {
-        $('#memberCard2').toggle()
-    })
+        $('#memberCard1, #memberCard3, #memberCard4').hide();
+        $('#memberCard2').toggle();
+    });
 
     $("#moreBtn3").click(async function () {
-        $('#memberCard3').toggle()
-    })
+        $('#memberCard1, #memberCard2, #memberCard4').hide();
+        $('#memberCard3').toggle();
+    });
 
     $("#moreBtn4").click(async function () {
-        $('#memberCard4').toggle()
-    })
+        $('#memberCard1, #memberCard2, #memberCard3').hide();
+        $('#memberCard4').toggle();
+    });
 
     $("#postingbtn").click(async function () {
 
@@ -154,7 +221,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-size: 40px ;
+        font-size: 40px;
     }
 </style>
 
@@ -166,8 +233,8 @@
         <P id="teamDetail"> 팀에 대한 자세한 설명 </P>
     </div>
     <!-- 멤버 간단한 카드  -->
-    <div class="row row-cols-1 row-cols-md-4 g-4">
-        <div class="col">
+    <div id="memberCards" class="row row-cols-1 row-cols-md-4 g-4">
+        <!-- <div class="col">
             <div class="card">
                 <img src="..." class="card-img-top" alt="...">
                 <div class="card-body">
@@ -210,11 +277,12 @@
                     <button id="moreBtn4" type="button" class="btn btn-outline-dark">더보기</button>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
-    <div>
+
+    <div id="datailCards">
         <!-- 멤버 좀더 자세한  카드  -->
-        <div id="memberCard1" class="card mb-3">
+        <!-- <div id="memberCard1" class="card mb-3" style="display:none">
             <div class="row g-0">
                 <div class="col-md-4">
                     <img src="" class="img-fluid rounded-start" alt="...">
@@ -229,7 +297,7 @@
                 </div>
             </div>
         </div>
-        <div id="memberCard2" class="card mb-3">
+        <div id="memberCard2" class="card mb-3" style="display:none">
             <div class="row g-0">
                 <div class="col-md-4">
                     <img src="" class="img-fluid rounded-start" alt="...">
@@ -244,7 +312,7 @@
                 </div>
             </div>
         </div>
-        <div id="memberCard3" class="card mb-3">
+        <div id="memberCard3" class="card mb-3" style="display:none">
             <div class="row g-0">
                 <div class="col-md-4">
                     <img src="" class="img-fluid rounded-start" alt="...">
@@ -259,7 +327,7 @@
                 </div>
             </div>
         </div>
-        <div id="memberCard4" class="card mb-3">
+        <div id="memberCard4" class="card mb-3" style="display:none">
             <div class="row g-0">
                 <div class="col-md-4">
                     <img src="" class="img-fluid rounded-start" alt="...">
@@ -273,14 +341,14 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <!-- 방명록 -->
     <div class="visit">
 
         <div class="guest">
-           <b> 방명록을 작성해 주세요 </b>
+            <b> 방명록을 작성해 주세요</b>
         </div>
         <div>
             <input type="text" id="something" placeholder="내용">
