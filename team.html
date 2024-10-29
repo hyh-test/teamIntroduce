@@ -37,6 +37,7 @@
     // 멤버 소개 불러와서 카드 붙이기
     let memberDocs = await getDocs(collection(db, "teaminfo"));
 
+    let idx =1;
     memberDocs.forEach((doc) => {
         let row = doc.data();
         let name = row['name'];
@@ -46,17 +47,42 @@
         let github = row['github'];
         let blog = row['blog'];
 
-        let temp_html = `            
+
+        let moreBtnId = 'moreBtn' + idx;
+        let detailBtnId = 'memberCard' + idx;
+
+        let simple_html = `            
             <div class="col">
                 <div class="card">
                     <img src="${image}" class="card-img-top">
                     <div class="card-body">
                         <h5 class="card-title">${name}</h5>
-                        <button id="moreBtn1" type="button" class="btn btn-outline-dark">더보기</button>
+                        <button id="${moreBtnId}" type="button" class="btn btn-outline-dark">더보기</button>
                     </div>
                 </div>
             </div>`;
-        $('#memberCards').append(temp_html);
+
+        let detail_html = `            
+            <div id="${detailBtnId}" class="card mb-3" style="display:none">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="${image}" class="img-fluid rounded-start">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">${name}</h5>
+                            <p class="card-text">
+                                mbti : ${mbti}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+        $('#memberCards').append(simple_html);
+        $('#datailCards').append(detail_html);
+
+        idx +=1;
     });
 
 
@@ -64,6 +90,7 @@
     document.addEventListener("DOMContentLoaded", async function () {
         // 각 버튼 클릭 시 다른 카드들은 닫고 해당 카드만 토글
         $("#moreBtn1").click(async function () {
+
             // 모든 카드 닫기
             $('#memberCard2, #memberCard3, #memberCard4').hide();
             // 클릭한 카드만 토글
@@ -247,9 +274,9 @@
         </div> -->
     </div>
 
-    <div>
+    <div id="datailCards">
         <!-- 멤버 좀더 자세한  카드  -->
-        <div id="memberCard1" class="card mb-3" style="display:none">
+        <!-- <div id="memberCard1" class="card mb-3" style="display:none">
             <div class="row g-0">
                 <div class="col-md-4">
                     <img src="" class="img-fluid rounded-start" alt="...">
@@ -308,7 +335,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <!-- 방명록 -->
