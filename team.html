@@ -37,7 +37,8 @@
     // 멤버 소개 불러와서 카드 붙이기
     let memberDocs = await getDocs(collection(db, "teaminfo"));
 
-    let idx =1;
+    let idx = 1; // id를 입력하기 위한 인덱스, 배열이 아니기 때문에 직접 관리
+
     memberDocs.forEach((doc) => {
         let row = doc.data();
         let name = row['name'];
@@ -51,6 +52,7 @@
         let moreBtnId = 'moreBtn' + idx;
         let detailBtnId = 'memberCard' + idx;
 
+        //간단한 멤버 소개 생성
         let simple_html = `            
             <div class="col">
                 <div class="card">
@@ -62,6 +64,7 @@
                 </div>
             </div>`;
 
+        //자세한 멤버 소개 생성
         let detail_html = `            
             <div id="${detailBtnId}" class="card mb-3" style="display:none">
                 <div class="row g-0">
@@ -82,35 +85,38 @@
         $('#memberCards').append(simple_html);
         $('#datailCards').append(detail_html);
 
-        idx +=1;
-    });
+        idx += 1;
 
-
-    // 버튼으로 멤버소개 카드 여닫기
-    document.addEventListener("DOMContentLoaded", async function () {
-        // 각 버튼 클릭 시 다른 카드들은 닫고 해당 카드만 토글
-        $("#moreBtn1").click(async function () {
+        $("#", moreBtnId).click(async function () {
 
             // 모든 카드 닫기
             $('#memberCard2, #memberCard3, #memberCard4').hide();
             // 클릭한 카드만 토글
             $('#memberCard1').toggle();
         });
+    });
 
-        $("#moreBtn2").click(async function () {
-            $('#memberCard1, #memberCard3, #memberCard4').hide();
-            $('#memberCard2').toggle();
-        });
+    // 버튼으로 멤버소개 카드 여닫기, 해당 카드만 열고 다른 카드는 닫기
+    $("#moreBtn1").click(async function () {
+        // 모든 카드 닫기
+        $('#memberCard2, #memberCard3, #memberCard4').hide();
+        // 클릭한 카드만 토글
+        $('#memberCard1').toggle();
+    });
 
-        $("#moreBtn3").click(async function () {
-            $('#memberCard1, #memberCard2, #memberCard4').hide();
-            $('#memberCard3').toggle();
-        });
+    $("#moreBtn2").click(async function () {
+        $('#memberCard1, #memberCard3, #memberCard4').hide();
+        $('#memberCard2').toggle();
+    });
 
-        $("#moreBtn4").click(async function () {
-            $('#memberCard1, #memberCard2, #memberCard3').hide();
-            $('#memberCard4').toggle();
-        });
+    $("#moreBtn3").click(async function () {
+        $('#memberCard1, #memberCard2, #memberCard4').hide();
+        $('#memberCard3').toggle();
+    });
+
+    $("#moreBtn4").click(async function () {
+        $('#memberCard1, #memberCard2, #memberCard3').hide();
+        $('#memberCard4').toggle();
     });
 
     $("#postingbtn").click(async function () {
