@@ -61,21 +61,30 @@
 
 
     // 버튼으로 멤버소개 카드 여닫기
-    $("#moreBtn1").click(async function () {
-        $('#memberCard1').toggle()
-    })
+    document.addEventListener("DOMContentLoaded", async function () {
+        // 각 버튼 클릭 시 다른 카드들은 닫고 해당 카드만 토글
+        $("#moreBtn1").click(async function () {
+            // 모든 카드 닫기
+            $('#memberCard2, #memberCard3, #memberCard4').hide();
+            // 클릭한 카드만 토글
+            $('#memberCard1').toggle();
+        });
 
-    $("#moreBtn2").click(async function () {
-        $('#memberCard2').toggle()
-    })
+        $("#moreBtn2").click(async function () {
+            $('#memberCard1, #memberCard3, #memberCard4').hide();
+            $('#memberCard2').toggle();
+        });
 
-    $("#moreBtn3").click(async function () {
-        $('#memberCard3').toggle()
-    })
+        $("#moreBtn3").click(async function () {
+            $('#memberCard1, #memberCard2, #memberCard4').hide();
+            $('#memberCard3').toggle();
+        });
 
-    $("#moreBtn4").click(async function () {
-        $('#memberCard4').toggle()
-    })
+        $("#moreBtn4").click(async function () {
+            $('#memberCard1, #memberCard2, #memberCard3').hide();
+            $('#memberCard4').toggle();
+        });
+    });
 
     $("#postingbtn").click(async function () {
 
@@ -240,7 +249,7 @@
 
     <div>
         <!-- 멤버 좀더 자세한  카드  -->
-        <div id="memberCard1" class="card mb-3">
+        <div id="memberCard1" class="card mb-3" style="display:none">
             <div class="row g-0">
                 <div class="col-md-4">
                     <img src="" class="img-fluid rounded-start" alt="...">
@@ -255,7 +264,7 @@
                 </div>
             </div>
         </div>
-        <div id="memberCard2" class="card mb-3">
+        <div id="memberCard2" class="card mb-3" style="display:none">
             <div class="row g-0">
                 <div class="col-md-4">
                     <img src="" class="img-fluid rounded-start" alt="...">
@@ -270,7 +279,7 @@
                 </div>
             </div>
         </div>
-        <div id="memberCard3" class="card mb-3">
+        <div id="memberCard3" class="card mb-3" style="display:none">
             <div class="row g-0">
                 <div class="col-md-4">
                     <img src="" class="img-fluid rounded-start" alt="...">
@@ -285,7 +294,7 @@
                 </div>
             </div>
         </div>
-        <div id="memberCard4" class="card mb-3">
+        <div id="memberCard4" class="card mb-3" style="display:none">
             <div class="row g-0">
                 <div class="col-md-4">
                     <img src="" class="img-fluid rounded-start" alt="...">
@@ -306,7 +315,7 @@
     <div class="visit">
 
         <div class="guest">
-            <b> 방명록을 작성해 주세요 </b>
+            <b> 방명록을 작성해 주세요</b>
         </div>
         <div>
             <input type="text" id="something" placeholder="내용">
