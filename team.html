@@ -123,11 +123,13 @@
 
         let something = $('#something').val();
         let name = $('#name').val();
+        let time = $('time').val();
 
 
         let doc = {
             'something': something,
             'name': name,
+            'time': new Date()
 
         };
         await addDoc(collection(db, "guestbook"), doc);
@@ -142,11 +144,19 @@
 
         let name = row['name'];
         let something = row['something'];
+        let time = row['time']
+        // milliseconds로 변환
+        let date = new Date(time.seconds * 1000);
+        // 원하는 형식으로 날짜와 시간을 포맷팅
+        let formateedTime = date.toLocaleString()
+
+
         let temp_html = ` <div class="col">
         <div class="visitcard">
             <div class="card-body">
                 <h5 class="card-title">${name}</h5>
                 <p class="card-text">${something}</p>
+                <p class="card-text"><small class="text-muted">${formateedTime}</small></p> <!-- 시간 추가 -->
             </div>
         </div>
     </div>`;
