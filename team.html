@@ -154,40 +154,73 @@
 
     });
 
-
-
-
-
-
 </script>
 <style>
-    .team {
-        font-size: 50px;
+    @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Oxanium:wght@200..800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Jua&family=Oxanium:wght@200..800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Jua&family=Nanum+Gothic&family=Oxanium:wght@200..800&display=swap');
+
+    /* 타이틀 */
+    .myTitle {
+
+        height: 250px;
+        color: white;
+
+        font-size: 70px;
+        font-family: "Oxanium", sans-serif;
+
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
 
+        background-image: url('images/title_background.jpg');
+        background-position: center;
+        background-size: cover;
+
+        margin-bottom: 0px;
+    }
+
+    /* 팀 소개 */
+    .teamInfo {
+        height: 400px;
+        width: 500px;
+        align-items: center;
+        justify-content: center;
+        margin: 0px auto 0px auto;
+        padding-top: 50px;
+    }
+
+    #contents {
+        background-color: #ecf8ff;
+    }
+
+    .teamInfo>#text {
+        font-size: 40px;
+        font-family: "Jua", sans-serif;
     }
 
     .teamReivew {
-        height: 250px;
-        margin: 50px auto 80px auto;
-        width: 900px;
-        box-shadow: 0px 0px 3px 0px blue;
+        height: 200px;
+        box-shadow: 0px 0px 5px 0px blue;
         border-radius: 5px;
+
+        padding: 30px;
+
+        font-family: "Nanum Gothic", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 18px;
+
+        text-align: center;
+
+        background-color: #f2f9fd;
     }
 
-    #teamSpot {
-        font-size: 20px;
-    }
-
-    #teamDetail {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-
+    /*구분 선 */
+    hr {
+        width: 30%;
+        margin: 3px auto 3px auto;
     }
 
     .visit {
@@ -201,15 +234,11 @@
     #something {
         margin: 10px;
         width: 97%;
-
-
     }
 
     #name {
         margin: 10px;
         width: 97%;
-
-
     }
 
     .visit>button {
@@ -227,14 +256,23 @@
 
 <body>
 
-    <h1 class="team">포텐조</h1>
-    <div class="teamReivew">
-        <p id="teamSpot"><b>팀 소개에 대해서 중요한 설명을 적으면 된다</b></p>
-        <P id="teamDetail"> 팀에 대한 자세한 설명 </P>
-    </div>
-    <!-- 멤버 간단한 카드  -->
-    <div id="memberCards" class="row row-cols-1 row-cols-md-4 g-4">
-        <!-- <div class="col">
+    <h1 class="myTitle">Potenzo</h1>
+    <div id="contents">
+        <div class="teamInfo">
+            <p id="text">🌠저희 포텐조는요..</h2>
+            <div class="teamReivew">
+                <p> Poten(tial)과 (4)조를 합쳐서 팀명을 만들었습니다! </p>
+                <p> 따끈따끈한 코린이가 가장 크게 성장할 수 있는 것 아시죠? <br> 저희는 무한한 잠재력을 가진 팀입니다! </p>
+                <p> 열심히 공부해서 훌륭한 개발자가 될 겁니다😁 </p>
+            </div>
+        </div>
+
+        <hr class="border border-primary border-3 opacity-75">
+
+
+        <!-- 멤버 간단한 카드  -->
+        <div id="memberCards" class="row row-cols-1 row-cols-md-4 g-4">
+            <!-- <div class="col">
             <div class="card">
                 <img src="..." class="card-img-top" alt="...">
                 <div class="card-body">
@@ -278,11 +316,11 @@
                 </div>
             </div>
         </div> -->
-    </div>
+        </div>
 
-    <div id="datailCards">
-        <!-- 멤버 좀더 자세한  카드  -->
-        <!-- <div id="memberCard1" class="card mb-3" style="display:none">
+        <div id="datailCards">
+            <!-- 멤버 좀더 자세한  카드  -->
+            <!-- <div id="memberCard1" class="card mb-3" style="display:none">
             <div class="row g-0">
                 <div class="col-md-4">
                     <img src="" class="img-fluid rounded-start" alt="...">
@@ -342,31 +380,31 @@
                 </div>
             </div>
         </div> -->
+        </div>
+
+        <!-- 방명록 -->
+        <div class="visit">
+
+            <div class="guest">
+                <b> 방명록을 작성해 주세요</b>
+            </div>
+            <div>
+                <input type="text" id="something" placeholder="내용">
+            </div>
+
+            <div>
+                <input type="text" id="name" placeholder="이름">
+            </div>
+
+            <button id="postingbtn" type="button" class="btn btn-outline-primary">제출하기</button>
+        </div>
+
+        <div class="mycards">
+            <div id="visitcard" class="row row-cols-1 row-cols-md-4 g-4">
+
+            </div>
+        </div>
     </div>
-
-    <!-- 방명록 -->
-    <div class="visit">
-
-        <div class="guest">
-            <b> 방명록을 작성해 주세요</b>
-        </div>
-        <div>
-            <input type="text" id="something" placeholder="내용">
-        </div>
-
-        <div>
-            <input type="text" id="name" placeholder="이름">
-        </div>
-
-        <button id="postingbtn" type="button" class="btn btn-outline-primary">제출하기</button>
-    </div>
-
-    <div class="mycards">
-        <div id="visitcard" class="row row-cols-1 row-cols-md-4 g-4">
-
-        </div>
-    </div>
-
 
 
 
