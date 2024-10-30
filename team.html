@@ -139,29 +139,33 @@
 
     // 데이터 불러오는 기능
     let docs = await getDocs(collection(db, "guestbook"));
-    docs.forEach((doc) => {
-        let row = doc.data();
 
+    // 시간 기준으로 최신순 정렬
+    let sortedDocs = docs.docs.sort((a, b) => {
+        return b.data().time.seconds - a.data().time.seconds;
+    });
+
+    // 정렬된 문서 표시
+    sortedDocs.forEach((doc) => {
+        let row = doc.data();
         let name = row['name'];
         let something = row['something'];
-        let time = row['time']
+        let time = row['time'];
+
         // milliseconds로 변환
         let date = new Date(time.seconds * 1000);
         // 원하는 형식으로 날짜와 시간을 포맷팅
-        let formateedTime = date.toLocaleString()
+        let formattedTime = date.toLocaleString();
 
-
-        let temp_html = ` <div class="col">
-        <div class="visitcard">
-            <div class="card-body">
-                <h5 class="card-title">${name}</h5>
-                <p class="card-text">${something}</p>
-                <p class="card-text"><small class="text-muted">${formateedTime}</small></p> <!-- 시간 추가 -->
-            </div>
+        let temp_html = ` 
+    <div class="visitcard">
+        <div class="card-body">
+            <h5 class="something">${something}</h5>
+            <p class="guestBookName"><b>${name}</b></p>
+            <p><small class="setTime">${formattedTime}</small></p>
         </div>
     </div>`;
         $('#visitcard').append(temp_html);
-
     });
 
 </script>
@@ -276,8 +280,9 @@
         height: 250px;
         margin: 50px auto 80px auto;
         width: 900px;
-        box-shadow: 0px 0px 3px 0px blue;
+        box-shadow: 0px 0px 3px 0px;
         border-radius: 5px;
+        background-color: rgb(232, 231, 255);
     }
 
     #something {
@@ -294,12 +299,57 @@
         margin: 7px 15px 0px 10px
     }
 
+    #visitcard {
+        margin: 0px auto 20px auto;
+        width: 95%;
+        box-shadow: 0px 0px 3px 0px;
+        border-radius: 5px;
+        background-color: rgb(200, 223, 255);
+    }
+
     .guest {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         font-size: 40px;
+    }
+
+    /*방명록 게시글 관련 */
+    .mycards{
+        padding-bottom: 50px;
+
+    }
+    .guestBook {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+
+    }
+
+    .guestBookName {
+        float: left;
+        align-items: center;
+        text-align: left;
+        gap: 2rem;
+        margin-right: 15px;
+
+    }
+
+    .something {
+        /* 한 줄 차지하여 옆에 붙지 않게 설정 */
+        display: block;
+        /* 박스가 부모 요소를 넘지 않도록 설정 */
+        max-width: 100%;
+        /* 여백 추가 */
+        padding: 8px 12px;
+        box-shadow: 0px 0px 3px 0px;
+        border-radius: 5px;
+        background-color: white;
+        font-size: 16px;
+
     }
 </style>
 
@@ -348,10 +398,10 @@
         </div>
 
         <div class="mycards">
-            <div id="visitcard" class="row row-cols-1 row-cols-md-4 g-4">
+            <div id="visitcard">
 
             </div>
         </div>
-    </div>
+
 
 </html>
