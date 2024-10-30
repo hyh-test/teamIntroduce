@@ -1,14 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>멤버 추가하기</title>
     <style>
-        
+
     </style>
+    <script>
+
+        async function summit() {
+            let name = $('#name').val();
+            let mbti = $('#mbti').val();
+            let goal = $('#goal').val();
+            let github = $('#github').val();
+            let blog = $('#blog').val();
+            let image = row['img']; //TODO
+
+            let doc = {
+                'name': name,
+                'mbti': mbti,
+                'goal': goal,
+                'github': github,
+                'blog': blog,
+                'img': name,
+
+                'time': new Date()
+
+            };
+            await addDoc(collection(db, "teaminfo"), doc);
+            alert('환영합니다!');
+
+            window.close();
+            opener.reload();
+        }
+
+        $("#submitBtn").click(summit());
+    </script>
 </head>
+
 <body>
-    
+    <div id="contents">
+        <p>정보 입력</p>
+        <div id="summitFrom">
+
+            <form class="inputImg" method="post" enctype="multipart/form-data"> <!-- 이미지 파일 데이터에 알맞는 enctype 설정 -->
+                <div class="addImage" id="image-show"> <!-- 이미지 띄울 공간 -->
+                </div>
+                <input type="file" accept="image/*" onchange="loadFile(this)">
+            </form>
+
+            <div>
+                <p>이름 : <input type="text" id="name"></p>
+            </div>
+            <div>
+                <p>MBTI : <input type="text" id="mbti"></p>
+            </div>
+            <div>
+                <p>GOAL : <input type="text" id="goal"></p>
+            </div>
+            <div>
+                <p>GitHub 주소 : <input type="text" id="github"></p>
+            </div>
+            <div>
+                <p>블로그 주소 : <input type="text" id="blog"></p>
+            </div>
+
+            <button id="summitBtn" type="button" class="btn btn-outline-primary">제출</button>
+        </div>
+    </div>
+
 </body>
+
 </html>
