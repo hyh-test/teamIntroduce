@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>포텐조 메인</title>
+ 
+    <style>
+       @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Oxanium:wght@200..800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Jua&family=Oxanium:wght@200..800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Jua&family=Nanum+Gothic&family=Oxanium:wght@200..800&display=swap');
+
+    /* 타이틀 */
+    .myTitle {
+
+        height: 250px;
+        color: white;
+
+        font-size: 70px;
+        font-family: "Oxanium", sans-serif;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        background-image: url('images/title_background.jpg');
+        background-position: center;
+        background-size: cover;
+
+        margin-bottom: 0px;
+    }
+
+    /* 팀 소개 */
+    .teamInfo {
+        height: 400px;
+        width: 500px;
+        align-items: center;
+        justify-content: center;
+        margin: 0px auto 0px auto;
+        padding-top: 50px;
+    }
+
+    #contents {
+        background-color: #ecf8ff;
+    }
+
+    .teamInfo>#text {
+        font-size: 40px;
+        font-family: "Jua", sans-serif;
+    }
+
+    .teamReivew {
+        height: 200px;
+        box-shadow: 0px 0px 5px 0px blue;
+        border-radius: 5px;
+
+        padding: 30px;
+
+        font-family: "Nanum Gothic", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 18px;
+
+        text-align: center;
+
+        background-color: #f2f9fd;
+    }
+
+    /*구분 선 */
+    hr {
+        width: 30%;
+        margin: 3px auto 3px auto;
+    }
+    </style>
+</head>
+<body>
+    <h1 class="myTitle">Potenzo</h1>
+    <div id="contents">
+        <div class="teamInfo">
+            <p id="text">🌠저희 포텐조는요..</h2>
+            <div class="teamReivew">
+                <p> Poten(tial)과 (4)조를 합쳐서 팀명을 만들었습니다! </p>
+                <p> 따끈따끈한 코린이가 가장 크게 성장할 수 있는 것 아시죠? <br> 저희는 무한한 잠재력을 가진 팀입니다! </p>
+                <p> 열심히 공부해서 훌륭한 개발자가 될 겁니다😁 </p>
+            </div>
+        </div>
+
+        <hr>
+        <nav>
+            <a href="members.html">멤버 소개</a> |
+            <a href="guestbook.html">방명록</a>
+        </nav>
+    </div>
+</body>
+</html>
