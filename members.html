@@ -8,285 +8,330 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>포텐조</title>
-</head>
-<script type="module">
+    <script type="module">
 
-    // Firebase SDK 라이브러리 가져오기
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-    import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
-
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-        apiKey: "AIzaSyAikeFYUoMKQjzALwRPkfVdGklJ3THihAU",
-        authDomain: "sparta-41391.firebaseapp.com",
-        projectId: "sparta-41391",
-        storageBucket: "sparta-41391.appspot.com",
-        messagingSenderId: "267297099636",
-        appId: "1:267297099636:web:7ec0e3783c463a516ba621",
-        measurementId: "G-Y0FG2XR0FD"
-    };
+        // Firebase SDK 라이브러리 가져오기
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
 
-    // Firebase 인스턴스 초기화
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // 멤버 소개 불러와서 카드 붙이기
-    let memberDocs = await getDocs(collection(db, "teaminfo"));
-
-    let idx = 1; // id를 입력하기 위한 인덱스, 배열이 아니기 때문에 직접 관리
-
-    memberDocs.forEach((doc) => {
-        let row = doc.data();
-        let name = row['name'];
-        let mbti = row['mbti'];
-        let image = row['img'];
-        let goal = row['goal'];
-        let github = row['github'];
-        let blog = row['blog'];
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyAikeFYUoMKQjzALwRPkfVdGklJ3THihAU",
+            authDomain: "sparta-41391.firebaseapp.com",
+            projectId: "sparta-41391",
+            storageBucket: "sparta-41391.appspot.com",
+            messagingSenderId: "267297099636",
+            appId: "1:267297099636:web:7ec0e3783c463a516ba621",
+            measurementId: "G-Y0FG2XR0FD"
+        };
 
 
-        let moreBtnId = 'moreBtn' + idx;
-        let detailCardId = 'memberCard' + idx;
+        // Firebase 인스턴스 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        //간단한 멤버 소개 생성
-        let simpleHtml = `            
-            <div id="memberCol" class="col">
-                <div class="card">
-                    <img src="${image}">
-                    <div class="card-body">
-                        <p class="card-title">${name}</p>
-                        <button id="${moreBtnId}" type="button" class="btn btn-outline-dark">더보기</button>
-                    </div>
-                </div>
-            </div>`;
+        // 멤버 소개 불러와서 카드 붙이기
+        let memberDocs = await getDocs(collection(db, "teaminfo"));
+
+        let idx = 1; // id를 입력하기 위한 인덱스, 배열이 아니기 때문에 직접 관리
+
+        memberDocs.forEach((doc) => {
+            let row = doc.data();
+            let name = row['name'];
+            let mbti = row['mbti'];
+            let image = row['img'];
+            let goal = row['goal'];
+            let github = row['github'];
+            let blog = row['blog'];
 
 
-        //자세한 멤버 소개 생성
-        let detailHtml = `            
-            <div id="${detailCardId}" class="detailBody" style="display:none">
-                <div class="container">
-                    <div id="simpleData" class="bigItem">
-                        <div id="picture">
+            let moreBtnId = 'moreBtn' + idx;
+            let detailCardId = 'memberCard' + idx;
+
+            //간단한 멤버 소개 생성
+            let simpleHtml = `            
+                <div id="memberCol" class="col">
+                    <div class="card">
                         <img src="${image}">
-                        </div>
-                        <div id="summary">
-                            <p id="name">${name}</p>
-                            <p id="mbti">${mbti}</p>
-                        </div>
-                    </div>
-                    <div id="detailData">
-                        <div id="texts">
-                            <p id="goal">목표</p>
-                            <p id= "myGoal">${goal}</p>
-                        </div>
-                        <div id class="imgs">
-                            <a href="${github}" target="_blank">
-	                            <img src="/images/githubLogo.png" alt="깃허브 주소">
-                            </a>
-                            <a href="${blog}" target="_blank">
-	                            <img src="/images/blogLogo.png" alt="블로그 주소">
-                            </a>
+                        <div class="card-body">
+                            <p class="card-title">${name}</p>
+                            <button id="${moreBtnId}" type="button" class="btn btn-outline-dark">더보기</button>
                         </div>
                     </div>
-                </div>
-            </div>`;
+                </div>`;
 
-        $('#memberCards').append(simpleHtml);
-        $('#datailCards').append(detailHtml);
 
-        idx += 1;
-    });
+            //자세한 멤버 소개 생성
+            let detailHtml = `            
+                <div id="${detailCardId}" class="detailBody" style="display:none">
+                    <div class="container">
+                        <div id="simpleData" class="bigItem">
+                            <div id="picture">
+                            <img src="${image}">
+                            </div>
+                            <div id="summary">
+                                <p id="name">${name}</p>
+                                <p id="mbti">${mbti}</p>
+                            </div>
+                        </div>
+                        <div id="detailData">
+                            <div id="texts">
+                                <p id="goal">목표</p>
+                                <p id= "myGoal">${goal}</p>
+                            </div>
+                            <div id class="imgs">
+                                <a href="${github}" target="_blank">
+                                    <img src="/images/githubLogo.png" alt="깃허브 주소">
+                                </a>
+                                <a href="${blog}" target="_blank">
+                                    <img src="/images/blogLogo.png" alt="블로그 주소">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
 
-    // 버튼으로 멤버소개 카드 여닫기, 해당 카드만 열고 다른 카드는 닫기
-    $("#moreBtn1").click(async function () {
-        // 모든 카드 닫기
-        $('#memberCard2, #memberCard3, #memberCard4').hide();
-        // 클릭한 카드만 토글
-        $('#memberCard1').toggle();
-    });
+            $('#memberCards').append(simpleHtml);
+            $('#datailCards').append(detailHtml);
 
-    $("#moreBtn2").click(async function () {
-        $('#memberCard1, #memberCard3, #memberCard4').hide();
-        $('#memberCard2').toggle();
-    });
+            idx += 1;
+        });
 
-    $("#moreBtn3").click(async function () {
-        $('#memberCard1, #memberCard2, #memberCard4').hide();
-        $('#memberCard3').toggle();
-    });
+        // 버튼으로 멤버소개 카드 여닫기, 해당 카드만 열고 다른 카드는 닫기
+        $("#moreBtn1").click(async function () {
+            // 모든 카드 닫기
+            $('#memberCard2, #memberCard3, #memberCard4').hide();
+            // 클릭한 카드만 토글
+            $('#memberCard1').toggle();
+        });
 
-</script>
-<style>
-    body {
-        background-color: #ecf8ff;
-    }
+        $("#moreBtn2").click(async function () {
+            $('#memberCard1, #memberCard3, #memberCard4').hide();
+            $('#memberCard2').toggle();
+        });
 
-    .members {
+        $("#moreBtn3").click(async function () {
+            $('#memberCard1, #memberCard2, #memberCard4').hide();
+            $('#memberCard3').toggle();
+        });
 
-        width: 60%;
-        align-items: center;
-        justify-content: center;
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Jua&family=Nanum+Gothic&family=Oxanium:wght@200..800&display=swap');
 
-        margin: 50px auto 50px auto;
-    }
 
-    #memberCol {
-        align-items: center;
-        justify-content: center;
-    }
+        body {
+            background-color: #ecf8ff;
+        }
 
-    .card {
-        text-align: center;
-        height: auto;
-        width: 100%;
-        background-color: #fdfff3;
-    }
+        /* 상단바 관련 */
+        #navi {
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin: 5px auto 0px auto;
+            width: 95%
+        }
 
-    .card>img {
-        height: 150px;
-        width: 150px;
-        object-fit: cover;
+        .navbar-brand {
+            font-size: 30px;
+            margin-left: 1rem;
+        }
 
-        margin: 5px auto 0px auto;
-        border-radius: 100%;
+        .nav-link {
+            font-size: 21px
+        }
 
-    }
+        .nav-item {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
 
-    .card-title {
-        font-size: 30px;
-        font-family: "Jua", sans-serif;
-        text-align: center;
-    }
 
-    /* 디테일 카드 */
-    #datailCards {
-        margin: 30px auto 30px auto;
-    }
+        .members {
 
-    .detailBody {
-        height: 450px;
+            width: 60%;
+            align-items: center;
+            justify-content: center;
 
-        background-color: #fdfff3;
-        background-clip: border-box;
-        box-shadow: 0px 0px 5px 0px rgb(255, 115, 0);
-        border-radius: 5px;
-    }
+            margin: 50px auto 50px auto;
+        }
 
-    .container {
+        #memberCol {
+            align-items: center;
+            justify-content: center;
+        }
 
-        height: 100%;
-        width: 70%;
+        .card {
+            text-align: center;
+            height: auto;
+            width: 100%;
+            background-color: rgb(225, 241, 255);
+        }
 
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-    }
+        .card>img {
+            height: 150px;
+            width: 150px;
+            object-fit: cover;
 
-    .bigItem {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
+            margin: 5px auto 0px auto;
+            border-radius: 100%;
 
-        margin: 30px 0px 30px 0px;
-    }
+        }
 
-    #picture {
+        .card-title {
+            font-size: 30px;
+            font-family: "Jua", sans-serif;
+            text-align: center;
+        }
 
-        padding: 0px 30px 0px 30px;
+        /* 디테일 카드 */
+        #datailCards {
+            margin: 30px auto 30px auto;
+        }
 
-        align-items: center;
-        justify-content: center;
-    }
+        .detailBody {
+            height: 450px;
 
-    #picture>img {
-        height: 150px;
-        width: 150px;
-        object-fit: cover;
+            background-color: rgb(225, 241, 255);
+            background-clip: border-box;
+            box-shadow: 0px 0px 10px 0px rgb(100, 131, 168);
+            border-radius: 5px;
+        }
 
-        margin: 5px auto 0px auto;
-        border-radius: 100%;
-    }
+        .container {
 
-    #summary {
-        width: 40%;
+            height: 100%;
+            width: 70%;
 
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+        }
 
-    #summary>p {
-        font-family: "Jua", sans-serif;
-        text-align: center;
-    }
+        .bigItem {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
 
-    #summary>#name {
-        font-size: 40px;
-    }
+            margin: 30px 0px 30px 0px;
+        }
 
-    #summary>#mbti {
-        font-size: 30px;
-    }
+        #picture {
 
-    #detailData {
-        padding-bottom: 30px;
-    }
+            padding: 0px 30px 0px 30px;
 
-    #texts {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
+            align-items: center;
+            justify-content: center;
+        }
 
-    #texts>#goal {
-        font-family: "Jua", sans-serif;
-        text-align: center;
-        font-size: 20px;
-    }
+        #picture>img {
+            height: 150px;
+            width: 150px;
+            object-fit: cover;
 
-    #texts>#myGoal {
-        font-family: "Nanum Gothic", sans-serif;
-        text-align: center;
-        font-size: 15px;
-    }
+            margin: 5px auto 0px auto;
+            border-radius: 100%;
+        }
 
-    .imgs {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-evenly;
+        #summary {
+            width: 40%;
 
-    }
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-    .imgs>a {
-        width: 75px;
-        height: 75px;
-    }
+        #summary>p {
+            font-family: "Jua", sans-serif;
+            text-align: center;
+        }
 
-    .imgs>a>img {
-        width: 75px;
-        height: 75px;
-    }
-</style>
+        #summary>#name {
+            font-size: 40px;
+        }
+
+        #summary>#mbti {
+            font-size: 30px;
+        }
+
+        #detailData {
+            padding-bottom: 30px;
+        }
+
+        #texts {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        #texts>#goal {
+            font-family: "Jua", sans-serif;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        #texts>#myGoal {
+            font-family: "Nanum Gothic", sans-serif;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .imgs {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+
+        }
+
+        .imgs>a {
+            width: 75px;
+            height: 75px;
+        }
+
+        .imgs>a>img {
+            width: 75px;
+            height: 75px;
+        }
+    </style>
+</head>
+
 
 <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="navi">
+        <div class="container-fluid">
+            <a class="navbar-brand">Potenzo</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"><b>맴버소개</b></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="guestbook.html">방명록</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    <!-- 멤버 간단한 카드  -->
-    <div id="memberCards" class="row row-cols-1 row-cols-md-3 g-4">
-    </div>
-    <div id="datailCards">
-    </div>
+    <div class="members">
+        <!-- 멤버 간단한 카드  -->
+        <div id="memberCards" class="row row-cols-1 row-cols-md-3 g-4">
+        </div>
 
-</html>
-<nav>
-    <a href="index.html">메인으로 돌아가기</a> |
-    <a href="guestbook.html">방명록</a>
-</nav>
+        <!-- 멤버 자세한 카드-->
+        <div id="datailCards">
+        </div>
+
+    </div>
 </body>
 
 </html>

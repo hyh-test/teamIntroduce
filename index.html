@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,78 +8,150 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>포텐조 메인</title>
- 
+
     <style>
-       @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Oxanium:wght@200..800&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Jua&family=Oxanium:wght@200..800&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Jua&family=Nanum+Gothic&family=Oxanium:wght@200..800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Oxanium:wght@200..800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Jua&family=Oxanium:wght@200..800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Jua&family=Nanum+Gothic&family=Oxanium:wght@200..800&display=swap');
 
-    /* 타이틀 */
-    .myTitle {
+        /* 타이틀 */
 
-        height: 250px;
-        color: white;
+        body {
+            background-color: #ecf8ff;
+        }
 
-        font-size: 70px;
-        font-family: "Oxanium", sans-serif;
+        /* 상단바 관련 */
+        #navi {
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin: 5px auto 0px auto;
+            width: 95%
+        }
 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        .navbar-brand {
+            font-size: 30px;
+            margin-left: 1rem;
+        }
 
-        background-image: url('images/title_background.jpg');
-        background-position: center;
-        background-size: cover;
+        .nav-link {
+            font-size: 21px
+        }
 
-        margin-bottom: 0px;
-    }
+        .nav-item {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
 
-    /* 팀 소개 */
-    .teamInfo {
-        height: 400px;
-        width: 500px;
-        align-items: center;
-        justify-content: center;
-        margin: 0px auto 0px auto;
-        padding-top: 50px;
-    }
+        .myTitle {
 
-    #contents {
-        background-color: #ecf8ff;
-    }
+            height: 250px;
+            color: white;
 
-    .teamInfo>#text {
-        font-size: 40px;
-        font-family: "Jua", sans-serif;
-    }
+            font-size: 70px;
+            font-family: "Oxanium", sans-serif;
 
-    .teamReivew {
-        height: 200px;
-        box-shadow: 0px 0px 5px 0px blue;
-        border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
 
-        padding: 30px;
+            background-image: url('images/title_background.jpg');
+            background-position: center;
+            background-size: cover;
 
-        font-family: "Nanum Gothic", sans-serif;
-        font-weight: 400;
-        font-style: normal;
-        font-size: 18px;
+            margin-bottom: 0px;
+        }
 
-        text-align: center;
 
-        background-color: #f2f9fd;
-    }
+        /* 상단바 관련 */
+        #navi {
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin: 5px auto 0px auto;
+            width: 95%
+        }
 
-    /*구분 선 */
-    hr {
-        width: 30%;
-        margin: 3px auto 3px auto;
-    }
+        .navbar-brand {
+            font-size: 30px;
+            margin-left: 1rem;
+        }
+
+        .nav-link {
+            font-size: 21px
+        }
+
+        .nav-item {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+
+
+        /* 팀 소개 */
+        .teamInfo {
+            height: 400px;
+            width: 500px;
+            align-items: center;
+            justify-content: center;
+            margin: 0px auto 0px auto;
+            padding-top: 50px;
+        }
+
+        #contents {
+            background-color: #ecf8ff;
+        }
+
+        .teamInfo>#text {
+            font-size: 40px;
+            font-family: "Jua", sans-serif;
+        }
+
+        .teamReivew {
+            height: 200px;
+            box-shadow: 0px 0px 10px 0px rgb(84, 168, 247);
+            border-radius: 5px;
+
+            padding: 30px;
+
+            font-family: "Nanum Gothic", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 18px;
+
+            text-align: center;
+
+
+        }
+
+        /*구분 선 */
+        hr {
+            width: 30%;
+            margin: 3px auto 3px auto;
+        }
     </style>
 </head>
+
 <body>
     <h1 class="myTitle">Potenzo</h1>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="navi">
+        <div class="container-fluid">
+            <a class="navbar-brand">Potenzo</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link"><b>Home</b></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="members.html">맴버소개</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="guestbook.html">방명록</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div id="contents">
         <div class="teamInfo">
             <p id="text">🌠저희 포텐조는요..</h2>
@@ -90,10 +163,7 @@
         </div>
 
         <hr>
-        <nav>
-            <a href="members.html">멤버 소개</a> |
-            <a href="guestbook.html">방명록</a>
-        </nav>
     </div>
 </body>
+
 </html>
