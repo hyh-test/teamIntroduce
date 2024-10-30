@@ -55,83 +55,39 @@
         // 데이터 불러오는 기능
         let docs = await getDocs(collection(db, "guestbook"));
 
-        // 정렬 함수
-        const compareByTime = (value) => {
-            return (a, b) => {
-                if (value === 1) {
-                    return b.data().time.seconds - a.data().time.seconds; // 최신순
-                } else if (value === 2) {
-                    return a.data().time.seconds - b.data().time.seconds; // 오래된순
-                }
-                return 0;
-            };
-        };
-
-        // 정렬된 문서 표시하는 함수
-        const displayDocs = (value) => {
-            $('#visitcard').empty(); // 이전 내용을 지우기
-            let sortedDocs = docs.docs.sort(compareByTime(value));
-
-            sortedDocs.forEach((doc) => {
-                let row = doc.data();
-                let name = row['name'];
-                let something = row['something'];
-                let time = row['time'];
-
-                // milliseconds로 변환
-                let date = new Date(time.seconds * 1000);
-                let formattedTime = date.toLocaleString();
-
-                let temp_html = ` 
-        <div class="visitcard">
-            <div class="card-body">
-                <h5 class="something">${something}</h5>
-                <p class="guestBookName"><b>${name}</b></p>
-                <p><small class="setTime">${formattedTime}</small></p>
-            </div>
-        </div>`;
-                $('#visitcard').append(temp_html);
-            });
-        };
-
-        // 초기 로드 시 최신순으로 표시
-        displayDocs(1);
-
-        // 정렬 옵션 변경 시 처리
-        $('.orderBy').change(function () {
-            let selectedValue = parseInt($(this).val());
-            displayDocs(selectedValue);
+        // 시간 기준으로 최신순 정렬
+        let sortedDocs = docs.docs.sort((a, b) => {
+            return b.data().time.seconds - a.data().time.seconds;
         });
+
+        // 정렬된 문서 표시
+        sortedDocs.forEach((doc) => {
+            let row = doc.data();
+            let name = row['name'];
+            let something = row['something'];
+            let time = row['time'];
+
+            // milliseconds로 변환
+            let date = new Date(time.seconds * 1000);
+            // 원하는 형식으로 날짜와 시간을 포맷팅
+            let formattedTime = date.toLocaleString();
+
+            let temp_html = ` 
+    <div class="visitcard">
+        <div class="card-body">
+            <h5 class="something">${something}</h5>
+            <p class="guestBookName"><b>${name}</b></p>
+            <p><small class="setTime">${formattedTime}</small></p>
+        </div>
+    </div>`;
+            $('#visitcard').append(temp_html);
+        });
+
     </script>
     <style>
         body {
             background-color: #ecf8ff;
         }
-
-        /* 상단바 관련 */
-        #navi {
-            background-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            margin: 5px auto 0px auto;
-            width: 95%
-        }
-
-        .navbar-brand {
-            font-size: 30px;
-            margin-left: 1rem;
-        }
-
-        .nav-link {
-            font-size: 21px
-        }
-
-        .nav-item {
-            margin-left: 15px;
-            margin-right: 15px;
-        }
-
-
 
         /*구분 선 */
         hr {
@@ -219,29 +175,11 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="navi">
-        <div class="container-fluid">
-            <a class="navbar-brand">Potenzo</a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="members.html">맴버소개</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"><b>방명록</b></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
     <div class="visit">
+
         <div class="guest">
             <b> 방명록을 작성해 주세요</b>
         </div>
-
         <div>
             <input type="text" id="something" placeholder="내용">
         </div>
