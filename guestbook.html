@@ -89,11 +89,29 @@
             background-color: #ecf8ff;
         }
 
-        /*구분 선 */
-        hr {
-            width: 30%;
-            margin: 3px auto 3px auto;
+        /* 상단바 관련 */
+        #navi {
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin: 5px auto 0px auto;
+            width: 95%
         }
+
+        .navbar-brand {
+            font-size: 30px;
+            margin-left: 1rem;
+        }
+
+        .nav-link {
+            font-size: 21px
+        }
+
+        .nav-item {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+
 
         .visit {
             height: 250px;
@@ -175,6 +193,24 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="navi">
+        <div class="container-fluid">
+            <a class="navbar-brand">Potenzo</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html" >Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="members.html">맴버소개</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"><b>방명록</b></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     <div class="visit">
 
         <div class="guest">
