@@ -50,50 +50,54 @@
 
 
         let moreBtnId = 'moreBtn' + idx;
-        let detailBtnId = 'memberCard' + idx;
+        let detailCardId = 'memberCard' + idx;
 
         //간단한 멤버 소개 생성
-        let simple_html = `            
-            <div class="col">
+        let simpleHtml = `            
+            <div id="memberCol" class="col">
                 <div class="card">
-                    <img src="${image}" class="card-img-top">
+                    <img src="${image}">
                     <div class="card-body">
-                        <h5 class="card-title">${name}</h5>
+                        <p class="card-title">${name}</p>
                         <button id="${moreBtnId}" type="button" class="btn btn-outline-dark">더보기</button>
                     </div>
                 </div>
             </div>`;
 
         //자세한 멤버 소개 생성
-        let detail_html = `            
-            <div id="${detailBtnId}" class="card mb-3" style="display:none">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="${image}" class="img-fluid rounded-start">
+        let detailHtml = `            
+            <div id="${detailCardId}" class="detailBody" style="display:none">
+                <div class="container">
+                    <div id="simpleData" class="bigItem">
+                        <div id="picture">
+                        <img src="${image}">
+                        </div>
+                        <div id="summary">
+                            <p id="name">${name}</p>
+                            <p id="mbti">${mbti}</p>
+                        </div>
                     </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">${name}</h5>
-                            <p class="card-text">
-                                mbti : ${mbti}
-                            </p>
+                    <div id="detailData">
+                        <div id="texts">
+                            <p id="goal">목표</p>
+                            <p id= "myGoal">${goal}</p>
+                        </div>
+                        <div id class="imgs">
+                            <a href="${github}" target="_blank">
+	                            <img src="/images/githubLogo.png" alt="깃허브 주소">
+                            </a>
+                            <a href="${blog}" target="_blank">
+	                            <img src="/images/blogLogo.png" alt="블로그 주소">
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>`;
 
-        $('#memberCards').append(simple_html);
-        $('#datailCards').append(detail_html);
+        $('#memberCards').append(simpleHtml);
+        $('#datailCards').append(detailHtml);
 
         idx += 1;
-
-        $("#", moreBtnId).click(async function () {
-
-            // 모든 카드 닫기
-            $('#memberCard2, #memberCard3, #memberCard4').hide();
-            // 클릭한 카드만 토글
-            $('#memberCard1').toggle();
-        });
     });
 
     // 버튼으로 멤버소개 카드 여닫기, 해당 카드만 열고 다른 카드는 닫기
@@ -231,12 +235,163 @@
         background-color: #f2f9fd;
     }
 
-    /*구분 선 */
+    /* 구분선 */
     hr {
         width: 30%;
         margin: 3px auto 3px auto;
     }
 
+    /* 멤버 소개*/
+    .members {
+
+        width: 60%;
+        align-items: center;
+        justify-content: center;
+
+        margin: 50px auto 50px auto;
+    }
+
+    #memberCol {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card {
+        text-align: center;
+        height: auto;
+        width: 100%;
+        background-color: #fdfff3;
+    }
+
+    .card>img {
+        height: 150px;
+        width: 150px;
+        object-fit: cover;
+
+        margin: 5px auto 0px auto;
+        border-radius: 100%;
+
+    }
+
+    .card-title {
+        font-size: 30px;
+        font-family: "Jua", sans-serif;
+        text-align: center;
+    }
+
+    /* 디테일 카드 */
+    #datailCards {
+        margin: 30px auto 30px auto;
+    }
+
+    .detailBody {
+        height: 450px;
+
+        background-color: #fdfff3;
+        background-clip: border-box;
+        box-shadow: 0px 0px 5px 0px rgb(255, 115, 0);
+        border-radius: 5px;
+    }
+
+    .container {
+
+        height: 100%;
+        width: 70%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    .bigItem {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        margin: 30px 0px 30px 0px;
+    }
+
+    #picture {
+
+        padding: 0px 30px 0px 30px;
+
+        align-items: center;
+        justify-content: center;
+    }
+
+    #picture>img {
+        height: 150px;
+        width: 150px;
+        object-fit: cover;
+
+        margin: 5px auto 0px auto;
+        border-radius: 100%;
+    }
+
+    #summary {
+        width: 40%;
+
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #summary>p {
+        font-family: "Jua", sans-serif;
+        text-align: center;
+    }
+
+    #summary>#name {
+        font-size: 40px;
+    }
+
+    #summary>#mbti {
+        font-size: 30px;
+    }
+
+    #detailData {
+        padding-bottom: 30px;
+    }
+
+    #texts {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    #texts>#goal {
+        font-family: "Jua", sans-serif;
+        text-align: center;
+        font-size: 20px;
+    }
+
+    #texts>#myGoal {
+        font-family: "Nanum Gothic", sans-serif;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    .imgs {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+
+    }
+
+    .imgs>a {
+        width: 75px;
+        height: 75px;
+    }
+
+    .imgs>a>img {
+        width: 75px;
+        height: 75px;
+    }
+
+
+    /* 방명록 */
     .visit {
         height: 250px;
         margin: 50px auto 80px auto;
@@ -277,10 +432,11 @@
     }
 
     /*방명록 게시글 관련 */
-    .mycards{
+    .mycards {
         padding-bottom: 50px;
 
     }
+
     .guestBook {
         display: flex;
         flex-direction: column;
@@ -319,7 +475,7 @@
     <h1 class="myTitle">Potenzo</h1>
     <div id="contents">
         <div class="teamInfo">
-            <p id="text">🌠저희 포텐조는요..</h2>
+            <p id="text">🌠저희 포텐조는요..</p>
             <div class="teamReivew">
                 <p> Poten(tial)과 (4)조를 합쳐서 팀명을 만들었습니다! </p>
                 <p> 따끈따끈한 코린이가 가장 크게 성장할 수 있는 것 아시죠? <br> 저희는 무한한 잠재력을 가진 팀입니다! </p>
@@ -331,116 +487,15 @@
 
 
         <!-- 멤버 간단한 카드  -->
-        <div id="memberCards" class="row row-cols-1 row-cols-md-3 g-4">
-            <!-- <div class="col">
-            <div class="card">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                    <button id="moreBtn1" type="button" class="btn btn-outline-dark">더보기</button>
-                </div>
+
+        <div class="members">
+            <div id="memberCards" class="row row-cols-1 row-cols-md-3 g-4">
             </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                    <button id="moreBtn2" type="button" class="btn btn-outline-dark">더보기</button>
-                </div>
+            <div id="datailCards">
             </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                    <button id="moreBtn3" type="button" class="btn btn-outline-dark">더보기</button>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                    <button id="moreBtn4" type="button" class="btn btn-outline-dark">더보기</button>
-                </div>
-            </div>
-        </div> -->
         </div>
 
-        <div id="datailCards">
-            <!-- 멤버 좀더 자세한  카드  -->
-            <!-- <div id="memberCard1" class="card mb-3" style="display:none">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title1</h5>
-                        <p class="card-text">
-
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="memberCard2" class="card mb-3" style="display:none">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title2</h5>
-                        <p class="card-text">
-
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="memberCard3" class="card mb-3" style="display:none">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title3</h5>
-                        <p class="card-text">
-
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="memberCard4" class="card mb-3" style="display:none">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title4</h5>
-                        <p class="card-text">
-
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        </div>
+        <hr class="border border-primary border-3 opacity-75">
 
         <!-- 방명록 -->
         <div class="visit">
@@ -464,12 +519,6 @@
 
             </div>
         </div>
-
-
-
-
-
-
 
 
 </html>
