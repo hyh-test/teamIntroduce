@@ -118,10 +118,9 @@
             $('#memberCard3').toggle();
         });
 
-
-        function joinMember() {
-            window.open('join.html', 'Remote', 'left=500, top = 0, width=400, height=300');
-        }
+        $("#addBtn").click(() => {
+            window.open('join.html', 'Remote', 'left=0, top = 0, width=500, height=500');
+        });
 
     </script>
     <style>
@@ -165,12 +164,13 @@
             margin: 50px auto 50px auto;
         }
 
-        .addBtn {
-
+        #addBtnBlock{
             display: flex;
-            
             justify-content: right;
+            margin : 20px 0px;
         }
+        
+
 
         #memberCol {
             align-items: center;
@@ -335,7 +335,9 @@
     </nav>
 
     <div class="members">
-        <div id="addBtn"><button type="button" class="btn btn-outline-warning">멤버 추가</button></div>
+        <div id="addBtnBlock">
+            <button id="addBtn" type="button" class="btn btn-outline-primary">멤버 추가</button>
+        </div>
         <!-- 멤버 간단한 카드  -->
         <div id="memberCards" class="row row-cols-1 row-cols-md-3 g-4">
         </div>
