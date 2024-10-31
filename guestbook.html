@@ -14,7 +14,7 @@
         // Firebase SDK 라이브러리 가져오기
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { collection, addDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { collection, addDoc, orderBy, query, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
 
@@ -70,7 +70,7 @@
             docs.forEach((doc) => {
                 let row = doc.data();
 
-
+                let id = doc.id;
                 let name = row['name'];
                 let something = row['something'];
                 let time = row['time'];
@@ -81,6 +81,7 @@
                 let temp_html = ` 
                 <div class="visitcard">
                     <div class="card-body">
+                        <button class="deleteBtn" data-name="${id}"></button>
                         <h5 class="something">${something}</h5>
                         <p class="guestBookName"><b>${name}</b></p>
                         <p><small class="setTime">${formattedTime}</small></p>
@@ -97,6 +98,36 @@
                 loadGuestbook(); // 정렬 옵션이 변경될 때 방명록을 다시 불러옴
             });
         });
+
+        //방명록 삭제기능
+
+        let deleteMember = async function (name) {
+
+            let targetId;
+
+            let memberDocs = await getDocs(collection(db, "guestbook"));
+
+            memberDocs.forEach((doc) => {
+                let row = doc.data();
+                let id = doc.id;
+
+                if (name === id) {
+                    targetId = id;
+                }
+            });
+
+            if (confirm("정말 삭제하시나요?")) {
+                await deleteDoc(doc(db, 'guestbook', targetId));
+                window.location.reload();
+            }
+        }
+
+        $(document).on('click', '.deleteBtn', function () {
+            const name = $(this).data('name');
+            deleteMember(name);
+        })
+
+
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gamja+Flower&family=Hahmlet:wght@100..900&family=Jua&family=Nanum+Gothic&family=Nanum+Myeongjo&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sunflower:wght@300;500&display=swap');
