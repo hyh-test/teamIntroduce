@@ -14,19 +14,19 @@
         // Firebase SDK 라이브러리 가져오기
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { collection, addDoc, orderBy, query, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getDocs, limit, startAfter, startAt } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
 
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
-            apiKey: "AIzaSyAikeFYUoMKQjzALwRPkfVdGklJ3THihAU",
-            authDomain: "sparta-41391.firebaseapp.com",
-            projectId: "sparta-41391",
-            storageBucket: "sparta-41391.appspot.com",
-            messagingSenderId: "267297099636",
-            appId: "1:267297099636:web:7ec0e3783c463a516ba621",
-            measurementId: "G-Y0FG2XR0FD"
+            apiKey: "AIzaSyAcyVw4FYlL5OVV7To7-qwtdxP14hiR5uQ",
+            authDomain: "potenzo-b5c40.firebaseapp.com",
+            projectId: "potenzo-b5c40",
+            storageBucket: "potenzo-b5c40.appspot.com",
+            messagingSenderId: "873077155570",
+            appId: "1:873077155570:web:52a190971def238643526b",
+            measurementId: "G-XPMVJMPKXG"
         };
 
 
@@ -52,40 +52,125 @@
             window.location.reload();
         })
 
-        // 데이터 불러오는 기능
-        let docs = await getDocs(collection(db, "guestbook"));
+        let currentPage = 1; // 현재 페이지 번호
+        let pageSnapshots = [];
+        let firstVisible = null;
+        let lastVisible = null; // 마지막으로 표시된 문서
+        const limitValue = 5; // 페이지당 문서 수
 
-        // 시간 기준으로 최신순 정렬
-        let sortedDocs = docs.docs.sort((a, b) => {
-            return b.data().time.seconds - a.data().time.seconds;
+        // 방명록을 로드하는 비동기 함수
+        async function loadGuestbook(page = 1, direction = "next") {
+            let order = $('#sortOrder').val(); // 정렬 기준 가져오기
+            const orderByDirection = order === "1" ? "desc" : "asc"; // 정렬 방향 설정
+
+            let guestbookQuery; // 쿼리 변수
+
+            // 페이지가 1일 경우
+            if (page === 1 && direction === "next") {
+                // 첫 페이지에 대한 쿼리
+                guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection), limit(limitValue));
+            } else if (direction === "next") {
+                // 그 외 페이지에 대한 쿼리 (startAfter 사용)
+                guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection), startAfter(pageSnapshots[currentPage - 1].last), limit(limitValue));
+            } else if (direction === "prev") {
+                // []
+                guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection), startAt(pageSnapshots[currentPage - 2].first), limit(limitValue));
+            }
+
+            const docs = await getDocs(guestbookQuery); // 쿼리 실행 및 문서 가져오기
+            $('#visitcard').empty(); // 기존 내용을 지우기
+
+            //const docList = direction === "prev" && orderByDirection === "desc" ? docs.docs.reverse() : docs.docs;
+
+            // 각 문서를 방문 카드 형태로 추가
+            docs.forEach((doc) => {
+                let row = doc.data(); // 문서 데이터
+                let id = doc.id; // 문서 ID
+                let name = row['name']; // 이름 필드
+                let something = row['something']; // 내용 필드
+                let time = row['time']; // 시간 필드
+
+                let date = new Date(time.seconds * 1000); // 시간 변환
+                let formattedTime = date.toLocaleString(); // 시간 포맷팅
+
+                // 카드 HTML 생성
+                let temp_html = `
+        <div class="visitcard">
+            <div class="card-body">
+                <button class="deleteBtn" data-name="${id}"></button>
+                <h5 class="something">${something}</h5>
+                <p class="guestBookName"><b>${name}</b></p>
+                <p><small class="setTime">${formattedTime}</small></p>
+            </div>
+        </div>`;
+                $('#visitcard').append(temp_html); // 카드 추가
+            });
+
+            // 마지막 문서 업데이트
+            if (docs.docs.length > 0) {
+                firstVisible = docs.docs[0];
+                lastVisible = docs.docs[docs.docs.length - 1]; // 마지막 문서 저장
+                currentPage = page; // 현재 페이지 업데이트
+                pageSnapshots[page - 1] = { first: firstVisible, last: lastVisible }
+            }
+            console.log("pageSnapshots", pageSnapshots.map(m => [m.first.data(), m.last.data()]));
+        }
+
+        // DOM 준비가 완료되면 실행
+        $(document).ready(function () {
+            loadGuestbook(); // 페이지 로드 시 방명록 불러오기
+
+            $('#sortOrder').change(function () {
+                loadGuestbook(); // 정렬 옵션이 변경될 때 방명록을 다시 불러옴
+            });
+
+            // 이전 페이지 버튼 클릭 시
+            $('#prevPageBtn').click(async function () {
+                if (currentPage > 1) {
+                    await loadGuestbook(currentPage - 1, "prev"); // 이전 페이지 로드
+                }
+            });
+
+            // 다음 페이지 버튼 클릭 시
+            $('#nextPageBtn').click(async function () {
+                await loadGuestbook(currentPage + 1); // 다음 페이지 로드
+            });
         });
 
-        // 정렬된 문서 표시
-        sortedDocs.forEach((doc) => {
-            let row = doc.data();
-            let name = row['name'];
-            let something = row['something'];
-            let time = row['time'];
 
-            // milliseconds로 변환
-            let date = new Date(time.seconds * 1000);
-            // 원하는 형식으로 날짜와 시간을 포맷팅
-            let formattedTime = date.toLocaleString();
+        //방명록 삭제기능
 
-            let temp_html = ` 
-    <div class="visitcard">
-        <div class="card-body">
-            <h5 class="something">${something}</h5>
-            <p class="guestBookName"><b>${name}</b></p>
-            <p><small class="setTime">${formattedTime}</small></p>
-        </div>
-    </div>`;
-            $('#visitcard').append(temp_html);
-        });
+        let deleteMember = async function (name) {
+
+            let targetId;
+
+            let memberDocs = await getDocs(collection(db, "guestbook"));
+
+            memberDocs.forEach((doc) => {
+                let row = doc.data();
+                let id = doc.id;
+
+                if (name === id) {
+                    targetId = id;
+                }
+            });
+
+            if (confirm("정말 삭제하시나요?")) {
+                await deleteDoc(doc(db, 'guestbook', targetId));
+                window.location.reload();
+            }
+        }
+
+        $(document).on('click', '.deleteBtn', function () {
+            const name = $(this).data('name');
+            deleteMember(name);
+        })
+
 
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gamja+Flower&family=Hahmlet:wght@100..900&family=Jua&family=Nanum+Gothic&family=Nanum+Myeongjo&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sunflower:wght@300;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Jua&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nanum+Gothic&family=Oxanium:wght@200..800&display=swap');
 
 
         body {
@@ -104,10 +189,15 @@
         .navbar-brand {
             font-size: 30px;
             margin-left: 1rem;
+
+            font-family: "Oxanium", sans-serif;
         }
 
         .nav-link {
-            font-size: 21px
+            font-size: 21px;
+            font-family: "Kanit", serif;
+            font-weight: 300;
+            font-style: normal;
         }
 
         .nav-item {
@@ -200,7 +290,22 @@
             border-radius: 5px;
             background-color: white;
             font-size: 16px;
+        }
 
+        #page {
+
+            display: flex;
+            align-items: center;
+            margin: 0px auto;
+
+        }
+
+        #prevPageBtn {
+            margin-right: 10px;
+        }
+
+        #nextPageBtn {
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -215,10 +320,10 @@
                         <a class="nav-link" href="index.html">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="members.html">맴버소개</a>
+                        <a class="nav-link" href="members.html">Members</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"><b>방명록</b></a>
+                        <a class="nav-link" href="guestbook.html">GuestBook</a>
                     </li>
                 </ul>
             </div>
