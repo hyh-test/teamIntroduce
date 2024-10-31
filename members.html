@@ -54,7 +54,7 @@
                 <div id="memberCol" class="col">
                     <div class="card">
                         <div id="cardTop">
-                            <button id="deleteBtn" data-name="${name}"></button>
+                            <button class="deleteBtn" data-name="${name}"></button>
                             <img src="${image}">
                         </div>
                         <div class="card-body">
@@ -146,7 +146,7 @@
             }
         }
 
-        $(document).on('click', '#deleteBtn', function () {
+        $(document).on('click', '.deleteBtn', function () {
             const name = $(this).data('name');
             deleteMember(name);
         })
