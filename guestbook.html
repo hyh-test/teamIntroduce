@@ -92,7 +92,7 @@
                 let temp_html = `
         <div class="visitcard">
             <div class="card-body">
-                <button class="deleteBtn" data-name="${id}">삭제</button>
+                <button class="deleteBtn" data-name="${id}"></button>
                 <h5 class="something">${something}</h5>
                 <p class="guestBookName"><b>${name}</b></p>
                 <p><small class="setTime">${formattedTime}</small></p>
@@ -264,7 +264,8 @@
         .card-body>button {
             height: 20px;
             width: 20px;
-            margin: auto 5px 5px auto;
+            margin: 7px 4px auto auto;
+            float: right;
 
             background-image: url(images/del.png);
             background-color: transparent;
