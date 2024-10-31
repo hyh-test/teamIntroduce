@@ -116,30 +116,6 @@
                 pageSnapshots[page - 1] = { first: firstVisible, last: lastVisible }
             }
             console.log("pageSnapshots", pageSnapshots.map(m => [m.first.data(), m.last.data()]));
-
-            // 전체 문서 수를 가져와서 페이지 수 계산
-            const totalDocs = await getDocs(query(collection(db, "guestbook"))); // 전체 문서 수 쿼리
-            //[1,2,3,4,5,6,7,8,9,10]    :0
-            //[11,12,13,4,5,6,7,8,9,20] :1
-            //[21,2,3,4,5,6,7,8,9,30]   :2
-            //[31,2,3,4,5,6,7,8,9,40]   :3
-            //[41]                      :4
-            const totalPages = Math.ceil(totalDocs.docs.length / limitValue); // 총 페이지 수 계산
-
-            // 페이지네이션 업데이트
-            updatePagination(currentPage, totalPages);
-        }
-
-        // 페이지네이션을 업데이트하는 함수
-        function updatePagination(current, totalPages) {
-            $('#pagination').empty(); // 기존 페이지 번호 지우기
-
-
-            // 이전 페이지 버튼 활성화/비활성화
-            $('#prevPageBtn').prop('disabled', current === 1); // 첫 페이지일 때 비활성화
-
-            // 다음 페이지 버튼 활성화/비활성화
-            $('#nextPageBtn').prop('disabled', current === totalPages); // 마지막 페이지일 때 비활성화
         }
 
         // DOM 준비가 완료되면 실행
