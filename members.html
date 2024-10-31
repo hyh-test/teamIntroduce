@@ -131,11 +131,14 @@
 
             let memberDocs = await getDocs(collection(db, "teaminfo"));
 
+            console.log(memberDocs);
+
             memberDocs.forEach((doc) => {
                 let row = doc.data();
                 let id = doc.id;
 
-                if (name === row['name']) {
+                //형식을 문자열로 통일시켜야 검색 정확하게 된다.
+                if (name.toString() === row['name']) {
                     targetId = id;
                 }
             });
