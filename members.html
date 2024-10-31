@@ -13,9 +13,7 @@
         // Firebase SDK 라이브러리 가져오기
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
+        import { doc, collection, addDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
@@ -56,7 +54,7 @@
                 <div id="memberCol" class="col">
                     <div class="card">
                         <div id="cardTop">
-                            <button id="deleteBtn"></button>
+                            <button id="deleteBtn" data-name="${name}"></button>
                             <img src="${image}">
                         </div>
                         <div class="card-body">
@@ -124,6 +122,35 @@
         $("#addBtn").click(() => {
             window.open('join.html', 'Remote', 'left=0, top = 0, width=500, height=500');
         });
+
+
+        //멤버 삭제 기능
+        let deleteMember = async function (name) {
+
+            let targetId;
+
+            let memberDocs = await getDocs(collection(db, "teaminfo"));
+
+            memberDocs.forEach((doc) => {
+                let row = doc.data();
+                let id = doc.id;
+
+                if (name === row['name']) {
+                    targetId = id;
+                }
+            });
+
+            if (confirm("정말 삭제하시나요?")) {
+                await deleteDoc(doc(db, 'teaminfo', targetId));
+                window.location.reload();
+            }
+        }
+
+        $(document).on('click', '#deleteBtn', function () {
+            const name = $(this).data('name');
+            deleteMember(name);
+        })
+
 
     </script>
     <style>
@@ -215,7 +242,7 @@
 
             background-repeat: no-repeat;
             border: none;
-            cursor:pointer;
+            cursor: pointer;
             vertical-align: middle;
         }
 
@@ -373,5 +400,10 @@
 
     </div>
 </body>
+
+<script type="module">
+
+
+</script>
 
 </html>
