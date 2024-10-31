@@ -44,6 +44,7 @@
             let goal = row['goal'];
             let github = row['github'];
             let blog = row['blog'];
+            let id = doc.id;
 
 
             let moreBtnId = 'moreBtn' + idx;
@@ -54,7 +55,7 @@
                 <div id="memberCol" class="col">
                     <div class="card">
                         <div id="cardTop">
-                            <button class="deleteBtn" data-name="${name}"></button>
+                            <button class="deleteBtn" data-name="${id}"></button>
                             <img src="${image}">
                         </div>
                         <div class="card-body">
@@ -125,20 +126,18 @@
 
 
         //멤버 삭제 기능
-        let deleteMember = async function (name) {
+        let deleteMember = async function (docId) {
 
             let targetId;
 
             let memberDocs = await getDocs(collection(db, "teaminfo"));
-
-            console.log(memberDocs);
 
             memberDocs.forEach((doc) => {
                 let row = doc.data();
                 let id = doc.id;
 
                 //형식을 문자열로 통일시켜야 검색 정확하게 된다.
-                if (name.toString() === row['name']) {
+                if (docId === id) {
                     targetId = id;
                 }
             });
