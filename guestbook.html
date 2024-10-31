@@ -32,7 +32,9 @@
 
         // Firebase 인스턴스 초기화
         const app = initializeApp(firebaseConfig);
+
         const db = getFirestore(app);
+
 
         $("#postingbtn").click(async function () {
 
@@ -44,7 +46,7 @@
             let doc = {
                 'something': something,
                 'name': name,
-                'time': new Date()
+                'time': new Date() // Timestamp로 저장
 
             };
             await addDoc(collection(db, "guestbook"), doc);
@@ -206,13 +208,6 @@
         }
 
 
-
-        /*구분 선 */
-        hr {
-            width: 30%;
-            margin: 3px auto 3px auto;
-        }
-
         .visit {
             height: 250px;
             margin: 50px auto 80px auto;
@@ -236,12 +231,39 @@
             margin: 7px 15px 0px 10px
         }
 
-        #visitcard {
-            margin: 0px auto 20px auto;
-            width: 95%;
-            box-shadow: 0px 0px 5px 0px rgb(100, 132, 172);
-            border-radius: 5px;
-            background-color: rgb(222, 238, 253);
+        #pagination {
+            margin-top: 20px;
+        }
+
+        .page-item {
+            display: inline-block;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .page-item.active {
+            font-weight: bold;
+            /* 현재 페이지를 볼드 처리 */
+            text-decoration: underline;
+            /* 현재 페이지에 언더라인 추가 */
+        }
+
+        /*방문자 카드 삭제 버튼*/
+
+        .card-body>button {
+            height: 20px;
+            width: 20px;
+            margin: 7px 4px auto auto;
+            float: right;
+
+            background-image: url(images/del.png);
+            background-color: transparent;
+            background-size: cover;
+
+            background-repeat: no-repeat;
+            border: none;
+            cursor: pointer;
+            vertical-align: middle;
         }
 
         .guest {
@@ -255,10 +277,64 @@
             font-style: normal;
         }
 
+
+
+
         /*방명록 게시글 관련 */
         .mycards {
-            padding-bottom: 50px;
+            display: flex;
+            /* 플렉스 박스 사용 */
+            flex-direction: column;
+            /* 세로 방향으로 정렬 */
+            align-items: flex-end;
+            /* 오른쪽 정렬 */
+            margin: 0px auto 20px auto;
+            width: 95%;
+            box-shadow: 0px 0px 5px 0px rgb(100, 132, 172);
+            border-radius: 5px;
+            background-color: rgb(222, 238, 253);
+        }
 
+        #pagination {
+            margin-top: 20px;
+            text-align: center;
+
+        }
+
+        .page-item {
+            display: inline-block;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .page-item.active {
+            font-weight: bold;
+            /* 현재 페이지를 볼드 처리 */
+            text-decoration: underline;
+            /* 현재 페이지에 언더라인 추가 */
+        }
+
+        #sortOrder {
+            margin-bottom: 10px;
+            /* 선택 박스와 내용 사이의 여백 */
+            align-self: flex-end;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: white;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* 부드러운 전환 효과 */
+            transition: border-color 0.3s;
+        }
+
+        #sortOrder:hover {
+            border-color: #0056b3;
+            /* 호버 시 테두리 색상 변경 */
+        }
+
+        #visitcard {
+            width: 95%;
+            margin: 0px auto 0px auto
         }
 
         .guestBook {
@@ -330,6 +406,7 @@
         </div>
     </nav>
     <div class="visit">
+
         <div class="guest">
             <b> 방명록을 작성해 주세요</b>
         </div>
@@ -345,10 +422,17 @@
     </div>
 
     <div class="mycards">
+        <select id="sortOrder">
+            <option value="1">최신순</option>
+            <option value="2">오래된순</option>
+        </select>
         <div id="visitcard">
-
         </div>
-    </div>
+        <div id="page">
+            <button id="prevPageBtn">이전 페이지</button>
+            <div id="pagination"></div> <!-- 페이지 번호를 표시할 div -->
+            <button id="nextPageBtn">다음 페이지</button>
+        </div>
 </body>
 
 </html>
