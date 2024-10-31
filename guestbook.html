@@ -15,7 +15,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         import { collection, addDoc, orderBy, query, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getDocs, limit, startAfter } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
 
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -54,50 +54,108 @@
             window.location.reload();
         })
 
-        async function loadGuestbook() {
-            //sortOrder에서 밸류를 가져온다.
-            let order = $('#sortOrder').val();
-            // 설정된 value값을 order로 불러서 1이면 desc (최신순) 2이면(오래된순)
-            const orderByDirection = order === "1" ? "desc" : "asc";
+        let currentPage = 1; // 현재 페이지 번호
+        let lastVisible = null; // 마지막으로 표시된 문서
+        const limitValue = 10; // 페이지당 문서 수
 
+        // 방명록을 로드하는 비동기 함수
+        async function loadGuestbook(page = 1) {
+            let order = $('#sortOrder').val(); // 정렬 기준 가져오기
+            const orderByDirection = order === "1" ? "desc" : "asc"; // 정렬 방향 설정
 
-            // 퀴리에 무엇을 불러오고 정렬 방식을 선택한다.
-            const guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection));
-            const docs = await getDocs(guestbookQuery);
+            let guestbookQuery; // 쿼리 변수
 
+            // 페이지가 1일 경우
+            if (page === 1) {
+                // 첫 페이지에 대한 쿼리
+                guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection), limit(limitValue));
+            } else {
+                // 그 외 페이지에 대한 쿼리 (startAfter 사용)
+                guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection), startAfter(lastVisible), limit(limitValue));
+            }
+
+            const docs = await getDocs(guestbookQuery); // 쿼리 실행 및 문서 가져오기
             $('#visitcard').empty(); // 기존 내용을 지우기
 
+            // 각 문서를 방문 카드 형태로 추가
             docs.forEach((doc) => {
-                let row = doc.data();
+                let row = doc.data(); // 문서 데이터
+                let id = doc.id; // 문서 ID
+                let name = row['name']; // 이름 필드
+                let something = row['something']; // 내용 필드
+                let time = row['time']; // 시간 필드
 
-                let id = doc.id;
-                let name = row['name'];
-                let something = row['something'];
-                let time = row['time'];
+                let date = new Date(time.seconds * 1000); // 시간 변환
+                let formattedTime = date.toLocaleString(); // 시간 포맷팅
 
-                let date = new Date(time.seconds * 1000);
-                let formattedTime = date.toLocaleString();
-
-                let temp_html = ` 
-                <div class="visitcard">
-                    <div class="card-body">
-                        <button class="deleteBtn" data-name="${id}"></button>
-                        <h5 class="something">${something}</h5>
-                        <p class="guestBookName"><b>${name}</b></p>
-                        <p><small class="setTime">${formattedTime}</small></p>
-                    </div>
-                </div>`;
-                $('#visitcard').append(temp_html);
+                // 카드 HTML 생성
+                let temp_html = `
+        <div class="visitcard">
+            <div class="card-body">
+                <button class="deleteBtn" data-name="${id}">삭제</button>
+                <h5 class="something">${something}</h5>
+                <p class="guestBookName"><b>${name}</b></p>
+                <p><small class="setTime">${formattedTime}</small></p>
+            </div>
+        </div>`;
+                $('#visitcard').append(temp_html); // 카드 추가
             });
+
+            // 마지막 문서 업데이트
+            if (docs.docs.length > 0) {
+                lastVisible = docs.docs[docs.docs.length - 1]; // 마지막 문서 저장
+                currentPage = page; // 현재 페이지 업데이트
+            }
+
+            // 전체 문서 수를 가져와서 페이지 수 계산
+            const totalDocs = await getDocs(query(collection(db, "guestbook"))); // 전체 문서 수 쿼리
+            const totalPages = Math.ceil(totalDocs.docs.length / limitValue); // 총 페이지 수 계산
+
+            // 페이지네이션 업데이트
+            updatePagination(currentPage, totalPages);
         }
 
+        // 페이지네이션을 업데이트하는 함수
+        function updatePagination(current, totalPages) {
+            $('#pagination').empty(); // 기존 페이지 번호 지우기
+
+            // 페이지 번호 생성
+            for (let i = 1; i <= totalPages; i++) {
+                const pageItem = $(`<span class="page-item${current === i ? ' active' : ''}">${i}</span>`);
+                pageItem.click(function () {
+                    loadGuestbook(i); // 페이지 클릭 시 해당 페이지 로드
+                });
+                $('#pagination').append(pageItem); // 페이지 번호 추가
+            }
+
+            // 이전 페이지 버튼 활성화/비활성화
+            $('#prevPageBtn').prop('disabled', current === 1); // 첫 페이지일 때 비활성화
+
+            // 다음 페이지 버튼 활성화/비활성화
+            $('#nextPageBtn').prop('disabled', current === totalPages); // 마지막 페이지일 때 비활성화
+        }
+
+        // DOM 준비가 완료되면 실행
         $(document).ready(function () {
             loadGuestbook(); // 페이지 로드 시 방명록 불러오기
 
             $('#sortOrder').change(function () {
                 loadGuestbook(); // 정렬 옵션이 변경될 때 방명록을 다시 불러옴
             });
+
+            // 이전 페이지 버튼 클릭 시
+            $('#prevPageBtn').click(async function () {
+                if (currentPage > 1) {
+                    await loadGuestbook(currentPage - 1); // 이전 페이지 로드
+                }
+            });
+
+            // 다음 페이지 버튼 클릭 시
+            $('#nextPageBtn').click(async function () {
+                await loadGuestbook(currentPage + 1); // 다음 페이지 로드
+            });
         });
+
 
         //방명록 삭제기능
 
@@ -184,6 +242,23 @@
             margin: 7px 15px 0px 10px
         }
 
+        #pagination {
+            margin-top: 20px;
+        }
+
+        .page-item {
+            display: inline-block;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .page-item.active {
+            font-weight: bold;
+            /* 현재 페이지를 볼드 처리 */
+            text-decoration: underline;
+            /* 현재 페이지에 언더라인 추가 */
+        }
+
         /*방문자 카드 삭제 버튼*/
 
         .card-body>button {
@@ -225,6 +300,25 @@
             box-shadow: 0px 0px 5px 0px rgb(100, 132, 172);
             border-radius: 5px;
             background-color: rgb(222, 238, 253);
+        }
+
+        #pagination {
+            margin-top: 20px;
+            text-align: center;
+            /* 페이지 번호 중앙 정렬 */
+        }
+
+        .page-item {
+            display: inline-block;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .page-item.active {
+            font-weight: bold;
+            /* 현재 페이지를 볼드 처리 */
+            text-decoration: underline;
+            /* 현재 페이지에 언더라인 추가 */
         }
 
         #sortOrder {
@@ -321,7 +415,11 @@
         </select>
         <div id="visitcard">
         </div>
-    </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+            <button id="prevPageBtn">이전 페이지</button>
+            <div id="pagination" style="text-align: center;"></div> <!-- 페이지 번호를 표시할 div -->
+            <button id="nextPageBtn">다음 페이지</button>>
+        </div>
 </body>
 
 </html>
