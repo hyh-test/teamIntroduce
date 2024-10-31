@@ -60,7 +60,7 @@
                         </div>
                         <div class="card-body">
                             <p class="card-title">${name}</p>
-                            <button id="${moreBtnId}" type="button" class="btn btn-outline-dark">더보기</button>
+                            <button data-name="${moreBtnId}" type="button" class="btn btn-outline-dark openBtn">더보기</button>
                         </div>
                     </div>
                 </div>`;
@@ -102,23 +102,33 @@
             idx += 1;
         });
 
+        // 상세 카드 열기
+        let openDetailCard = async function (num) {
+
+            let flag;
+
+            const name = '#memberCard' + num;
+
+            if ($(name).css('display') === 'none') {
+                flag = true;
+            }
+
+            $('.detailBody').hide();
+
+            if (flag) {
+                $(name).show();
+            }
+
+
+
+        }
+
         // 버튼으로 멤버소개 카드 여닫기, 해당 카드만 열고 다른 카드는 닫기
-        $("#moreBtn1").click(async function () {
-            // 모든 카드 닫기
-            $('#memberCard2, #memberCard3, #memberCard4').hide();
-            // 클릭한 카드만 토글
-            $('#memberCard1').toggle();
-        });
-
-        $("#moreBtn2").click(async function () {
-            $('#memberCard1, #memberCard3, #memberCard4').hide();
-            $('#memberCard2').toggle();
-        });
-
-        $("#moreBtn3").click(async function () {
-            $('#memberCard1, #memberCard2, #memberCard4').hide();
-            $('#memberCard3').toggle();
-        });
+        $(document).on('click', '.openBtn', function () {
+            let name = $(this).data('name');
+            const id = name.substr(7);
+            openDetailCard(id);
+        })
 
         $("#addBtn").click(() => {
             window.open('join.html', 'Remote', 'left=0, top = 0, width=500, height=500');
@@ -393,7 +403,7 @@
             <button id="addBtn" type="button" class="btn btn-outline-primary">멤버 추가</button>
         </div>
         <!-- 멤버 간단한 카드  -->
-        <div id="memberCards" class="row row-cols-1 row-cols-md-3 g-4">
+        <div id="memberCards" class="row row-cols-1 row-cols-md-4 g-4">
         </div>
 
         <!-- 멤버 자세한 카드-->
