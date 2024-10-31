@@ -270,6 +270,9 @@
             font-style: normal;
         }
 
+
+
+
         /*방명록 게시글 관련 */
         .mycards {
             display: flex;
@@ -288,7 +291,7 @@
         #pagination {
             margin-top: 20px;
             text-align: center;
-            /* 페이지 번호 중앙 정렬 */
+
         }
 
         .page-item {
@@ -322,6 +325,11 @@
             /* 호버 시 테두리 색상 변경 */
         }
 
+        #visitcard {
+            width: 95%;
+            margin: 0px auto 0px auto
+        }
+
         .guestBook {
             display: flex;
             flex-direction: column;
@@ -351,8 +359,25 @@
             border-radius: 5px;
             background-color: white;
             font-size: 16px;
+        }
+
+        #page {
+
+            display: flex; 
+            align-items: center;
+            margin: 0px auto;
 
         }
+
+        #prevPageBtn{
+            margin-right: 10px;
+        }
+
+        #nextPageBtn{
+            margin-left: 10px;
+        }
+
+
     </style>
 </head>
 
@@ -398,10 +423,10 @@
         </select>
         <div id="visitcard">
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+        <div id="page">
             <button id="prevPageBtn">이전 페이지</button>
-            <div id="pagination" style="text-align: center;"></div> <!-- 페이지 번호를 표시할 div -->
-            <button id="nextPageBtn">다음 페이지</button>>
+            <div id="pagination"></div> <!-- 페이지 번호를 표시할 div -->
+            <button id="nextPageBtn">다음 페이지</button>
         </div>
 </body>
 
