@@ -15,7 +15,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         import { collection, addDoc, orderBy, query, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { getDocs, limit, startAfter } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getDocs, limit, startAfter, startAt } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
 
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -55,27 +55,34 @@
         })
 
         let currentPage = 1; // 현재 페이지 번호
+        let pageSnapshots = [];
+        let firstVisible = null;
         let lastVisible = null; // 마지막으로 표시된 문서
         const limitValue = 5; // 페이지당 문서 수
 
         // 방명록을 로드하는 비동기 함수
-        async function loadGuestbook(page = 1) {
+        async function loadGuestbook(page = 1, direction = "next") {
             let order = $('#sortOrder').val(); // 정렬 기준 가져오기
             const orderByDirection = order === "1" ? "desc" : "asc"; // 정렬 방향 설정
 
             let guestbookQuery; // 쿼리 변수
 
             // 페이지가 1일 경우
-            if (page === 1) {
+            if (page === 1 && direction === "next") {
                 // 첫 페이지에 대한 쿼리
                 guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection), limit(limitValue));
-            } else {
+            } else if (direction === "next") {
                 // 그 외 페이지에 대한 쿼리 (startAfter 사용)
-                guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection), startAfter(lastVisible), limit(limitValue));
+                guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection), startAfter(pageSnapshots[currentPage - 1].last), limit(limitValue));
+            } else if (direction === "prev") {
+                // []
+                guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection), startAt(pageSnapshots[currentPage - 2].first), limit(limitValue));
             }
 
             const docs = await getDocs(guestbookQuery); // 쿼리 실행 및 문서 가져오기
             $('#visitcard').empty(); // 기존 내용을 지우기
+
+            //const docList = direction === "prev" && orderByDirection === "desc" ? docs.docs.reverse() : docs.docs;
 
             // 각 문서를 방문 카드 형태로 추가
             docs.forEach((doc) => {
@@ -103,12 +110,20 @@
 
             // 마지막 문서 업데이트
             if (docs.docs.length > 0) {
+                firstVisible = docs.docs[0];
                 lastVisible = docs.docs[docs.docs.length - 1]; // 마지막 문서 저장
                 currentPage = page; // 현재 페이지 업데이트
+                pageSnapshots[page - 1] = { first: firstVisible, last: lastVisible }
             }
+            console.log("pageSnapshots", pageSnapshots.map(m => [m.first.data(), m.last.data()]));
 
             // 전체 문서 수를 가져와서 페이지 수 계산
             const totalDocs = await getDocs(query(collection(db, "guestbook"))); // 전체 문서 수 쿼리
+            //[1,2,3,4,5,6,7,8,9,10]    :0
+            //[11,12,13,4,5,6,7,8,9,20] :1
+            //[21,2,3,4,5,6,7,8,9,30]   :2
+            //[31,2,3,4,5,6,7,8,9,40]   :3
+            //[41]                      :4
             const totalPages = Math.ceil(totalDocs.docs.length / limitValue); // 총 페이지 수 계산
 
             // 페이지네이션 업데이트
@@ -117,6 +132,9 @@
 
         // 페이지네이션을 업데이트하는 함수
         function updatePagination(current, totalPages) {
+            $('#pagination').empty(); // 기존 페이지 번호 지우기
+
+
             // 이전 페이지 버튼 활성화/비활성화
             $('#prevPageBtn').prop('disabled', current === 1); // 첫 페이지일 때 비활성화
 
@@ -135,7 +153,7 @@
             // 이전 페이지 버튼 클릭 시
             $('#prevPageBtn').click(async function () {
                 if (currentPage > 1) {
-                    await loadGuestbook(currentPage - 1); // 이전 페이지 로드
+                    await loadGuestbook(currentPage - 1, "prev"); // 이전 페이지 로드
                 }
             });
 
