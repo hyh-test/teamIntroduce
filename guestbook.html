@@ -56,7 +56,7 @@
 
         let currentPage = 1; // 현재 페이지 번호
         let lastVisible = null; // 마지막으로 표시된 문서
-        const limitValue = 10; // 페이지당 문서 수
+        const limitValue = 5; // 페이지당 문서 수
 
         // 방명록을 로드하는 비동기 함수
         async function loadGuestbook(page = 1) {
@@ -117,17 +117,6 @@
 
         // 페이지네이션을 업데이트하는 함수
         function updatePagination(current, totalPages) {
-            $('#pagination').empty(); // 기존 페이지 번호 지우기
-
-            // 페이지 번호 생성
-            for (let i = 1; i <= totalPages; i++) {
-                const pageItem = $(`<span class="page-item${current === i ? ' active' : ''}">${i}</span>`);
-                pageItem.click(function () {
-                    loadGuestbook(i); // 페이지 클릭 시 해당 페이지 로드
-                });
-                $('#pagination').append(pageItem); // 페이지 번호 추가
-            }
-
             // 이전 페이지 버튼 활성화/비활성화
             $('#prevPageBtn').prop('disabled', current === 1); // 첫 페이지일 때 비활성화
 
