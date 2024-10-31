@@ -14,7 +14,7 @@
         // Firebase SDK 라이브러리 가져오기
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { collection, addDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
 
@@ -32,7 +32,9 @@
 
         // Firebase 인스턴스 초기화
         const app = initializeApp(firebaseConfig);
+
         const db = getFirestore(app);
+
 
         $("#postingbtn").click(async function () {
 
@@ -52,37 +54,63 @@
             window.location.reload();
         })
 
-        // 데이터 불러오는 기능
-        let docs = await getDocs(collection(db, "guestbook"));
+        $("#postingbtn").click(async function () {
+            let something = $('#something').val();
+            let name = $('#name').val();
 
-        // 시간 기준으로 최신순 정렬
-        let sortedDocs = docs.docs.sort((a, b) => {
-            return b.data().time.seconds - a.data().time.seconds;
+            let doc = {
+                'something': something,
+                'name': name,
+                'time': new Date() // Timestamp로 저장
+            };
+            await addDoc(collection(db, "guestbook"), doc);
+            alert('저장완료');
+            window.location.reload();
         });
 
-        // 정렬된 문서 표시
-        sortedDocs.forEach((doc) => {
-            let row = doc.data();
-            let name = row['name'];
-            let something = row['something'];
-            let time = row['time'];
+        async function loadGuestbook() {
+            //sortOrder에서 밸류를 가져온다.
+            let order = $('#sortOrder').val();
+            // 설정된 value값을 order로 불러서 1이면 desc (최신순) 2이면(오래된순)
+            const orderByDirection = order === "1" ? "desc" : "asc";
 
-            // milliseconds로 변환
-            let date = new Date(time.seconds * 1000);
-            // 원하는 형식으로 날짜와 시간을 포맷팅
-            let formattedTime = date.toLocaleString();
 
-            let temp_html = ` 
-    <div class="visitcard">
-        <div class="card-body">
-            <h5 class="something">${something}</h5>
-            <p class="guestBookName"><b>${name}</b></p>
-            <p><small class="setTime">${formattedTime}</small></p>
-        </div>
-    </div>`;
-            $('#visitcard').append(temp_html);
+            // 퀴리에 무엇을 불러오고 정렬 방식을 선택한다.
+            const guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection));
+            const docs = await getDocs(guestbookQuery);
+
+            $('#visitcard').empty(); // 기존 내용을 지우기
+
+            docs.forEach((doc) => {
+                let row = doc.data();
+
+
+                let name = row['name'];
+                let something = row['something'];
+                let time = row['time'];
+
+                let date = new Date(time.seconds * 1000);
+                let formattedTime = date.toLocaleString();
+
+                let temp_html = ` 
+                <div class="visitcard">
+                    <div class="card-body">
+                        <h5 class="something">${something}</h5>
+                        <p class="guestBookName"><b>${name}</b></p>
+                        <p><small class="setTime">${formattedTime}</small></p>
+                    </div>
+                </div>`;
+                $('#visitcard').append(temp_html);
+            });
+        }
+
+        $(document).ready(function () {
+            loadGuestbook(); // 페이지 로드 시 방명록 불러오기
+
+            $('#sortOrder').change(function () {
+                loadGuestbook(); // 정렬 옵션이 변경될 때 방명록을 다시 불러옴
+            });
         });
-
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gamja+Flower&family=Hahmlet:wght@100..900&family=Jua&family=Nanum+Gothic&family=Nanum+Myeongjo&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sunflower:wght@300;500&display=swap');
@@ -115,13 +143,6 @@
             margin-right: 15px;
         }
 
-
-
-        /*구분 선 */
-        hr {
-            width: 30%;
-            margin: 3px auto 3px auto;
-        }
 
         .visit {
             height: 250px;
@@ -225,6 +246,7 @@
         </div>
     </nav>
     <div class="visit">
+
         <div class="guest">
             <b> 방명록을 작성해 주세요</b>
         </div>
@@ -241,8 +263,11 @@
 
     <div class="mycards">
         <div id="visitcard">
-
         </div>
+        <select id="sortOrder">
+            <option value="1">최신순</option>
+            <option value="2">오래된순</option>
+        </select>
     </div>
 </body>
 
