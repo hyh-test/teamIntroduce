@@ -54,20 +54,6 @@
             window.location.reload();
         })
 
-        $("#postingbtn").click(async function () {
-            let something = $('#something').val();
-            let name = $('#name').val();
-
-            let doc = {
-                'something': something,
-                'name': name,
-                'time': new Date() // Timestamp로 저장
-            };
-            await addDoc(collection(db, "guestbook"), doc);
-            alert('저장완료');
-            window.location.reload();
-        });
-
         async function loadGuestbook() {
             //sortOrder에서 밸류를 가져온다.
             let order = $('#sortOrder').val();
