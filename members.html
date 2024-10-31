@@ -13,9 +13,7 @@
         // Firebase SDK 라이브러리 가져오기
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
+        import { doc, collection, addDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
@@ -55,7 +53,10 @@
             let simpleHtml = `            
                 <div id="memberCol" class="col">
                     <div class="card">
-                        <img src="${image}">
+                        <div id="cardTop">
+                            <button class="deleteBtn" data-name="${name}"></button>
+                            <img src="${image}">
+                        </div>
                         <div class="card-body">
                             <p class="card-title">${name}</p>
                             <button id="${moreBtnId}" type="button" class="btn btn-outline-dark">더보기</button>
@@ -122,6 +123,35 @@
             window.open('join.html', 'Remote', 'left=0, top = 0, width=500, height=500');
         });
 
+
+        //멤버 삭제 기능
+        let deleteMember = async function (name) {
+
+            let targetId;
+
+            let memberDocs = await getDocs(collection(db, "teaminfo"));
+
+            memberDocs.forEach((doc) => {
+                let row = doc.data();
+                let id = doc.id;
+
+                if (name === row['name']) {
+                    targetId = id;
+                }
+            });
+
+            if (confirm("정말 삭제하시나요?")) {
+                await deleteDoc(doc(db, 'teaminfo', targetId));
+                window.location.reload();
+            }
+        }
+
+        $(document).on('click', '.deleteBtn', function () {
+            const name = $(this).data('name');
+            deleteMember(name);
+        })
+
+
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Jua&family=Nanum+Gothic&family=Oxanium:wght@200..800&display=swap');
@@ -164,12 +194,12 @@
             margin: 50px auto 50px auto;
         }
 
-        #addBtnBlock{
+        #addBtnBlock {
             display: flex;
             justify-content: right;
-            margin : 20px 0px;
+            margin: 20px 0px;
         }
-        
+
 
 
         #memberCol {
@@ -184,7 +214,14 @@
             background-color: rgb(225, 241, 255);
         }
 
-        .card>img {
+        #cardTop {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #cardTop>img {
             height: 150px;
             width: 150px;
             object-fit: cover;
@@ -192,6 +229,21 @@
             margin: 5px auto 0px auto;
             border-radius: 100%;
 
+        }
+
+        #cardTop>button {
+            height: 20px;
+            width: 20px;
+            margin: 5px 5px auto auto;
+
+            background-image: url(images/delete.png);
+            background-color: transparent;
+            background-size: cover;
+
+            background-repeat: no-repeat;
+            border: none;
+            cursor: pointer;
+            vertical-align: middle;
         }
 
         .card-title {
@@ -348,5 +400,10 @@
 
     </div>
 </body>
+
+<script type="module">
+
+
+</script>
 
 </html>
