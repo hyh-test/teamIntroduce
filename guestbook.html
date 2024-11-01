@@ -69,20 +69,15 @@
 
             // 페이지가 1일 경우
             if (page === 1 && direction === "next") {
-                // 첫 페이지에 대한 쿼리
                 guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection), limit(limitValue));
             } else if (direction === "next") {
-                // 그 외 페이지에 대한 쿼리 (startAfter 사용)
-                guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection), startAfter(pageSnapshots[currentPage - 1].last), limit(limitValue));
+                guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection), startAfter(lastVisible), limit(limitValue));
             } else if (direction === "prev") {
-                // []
                 guestbookQuery = query(collection(db, "guestbook"), orderBy("time", orderByDirection), startAt(pageSnapshots[currentPage - 2].first), limit(limitValue));
             }
 
             const docs = await getDocs(guestbookQuery); // 쿼리 실행 및 문서 가져오기
             $('#visitcard').empty(); // 기존 내용을 지우기
-
-            //const docList = direction === "prev" && orderByDirection === "desc" ? docs.docs.reverse() : docs.docs;
 
             // 각 문서를 방문 카드 형태로 추가
             docs.forEach((doc) => {
@@ -113,9 +108,17 @@
                 firstVisible = docs.docs[0];
                 lastVisible = docs.docs[docs.docs.length - 1]; // 마지막 문서 저장
                 currentPage = page; // 현재 페이지 업데이트
-                pageSnapshots[page - 1] = { first: firstVisible, last: lastVisible }
+                pageSnapshots[page - 1] = { first: firstVisible, last: lastVisible };
+
+                // 다음 페이지에 문서가 있는지 확인
+                const hasMoreDocs = docs.docs.length === limitValue;
+                $('#nextPageBtn').prop('disabled', !hasMoreDocs); // 다음 페이지 버튼 활성화/비활성화
+            } else {
+                $('#nextPageBtn').prop('disabled', true); // 데이터가 없으면 버튼 비활성화
             }
-            console.log("pageSnapshots", pageSnapshots.map(m => [m.first.data(), m.last.data()]));
+
+            // 첫 페이지일 때 이전 버튼 비활성화
+            $('#prevPageBtn').prop('disabled', currentPage === 1);
         }
 
         // DOM 준비가 완료되면 실행
@@ -131,15 +134,39 @@
                 if (currentPage > 1) {
                     await loadGuestbook(currentPage - 1, "prev"); // 이전 페이지 로드
                 }
+                // 이전 버튼 상태 업데이트
+                $('#prevPageBtn').prop('disabled', currentPage === 1);
             });
 
             // 다음 페이지 버튼 클릭 시
             $('#nextPageBtn').click(async function () {
-                await loadGuestbook(currentPage + 1); // 다음 페이지 로드
+                const nextPage = currentPage + 1;
+
+                // 데이터가 있는지 확인
+                const order = $('#sortOrder').val(); // 정렬 기준 가져오기
+                const orderByDirection = order === "1" ? "desc" : "asc"; // 정렬 방향 설정
+                let guestbookQuery = query(
+                    collection(db, "guestbook"),
+                    orderBy("time", orderByDirection),
+                    startAfter(lastVisible), // 마지막으로 로드한 문서 이후부터 시작
+                    limit(limitValue)
+                );
+
+                const docs = await getDocs(guestbookQuery); // 쿼리 실행
+
+                // 데이터가 있는지 확인
+                if (docs.docs.length > 0) {
+                    await loadGuestbook(nextPage); // 데이터가 있으면 다음 페이지 로드
+                    // 이전 버튼 상태 업데이트
+                    $('#prevPageBtn').prop('disabled', false); // 다음 페이지로 이동했으니 이전 버튼 활성화
+                } else {
+                    $('#nextPageBtn').prop('disabled', true); // 데이터가 없으면 버튼 비활성화
+                }
+
+                // 이전 버튼 상태 업데이트
+                $('#prevPageBtn').prop('disabled', currentPage === 1);
             });
         });
-
-
         //방명록 삭제기능
 
         let deleteMember = async function (name) {
