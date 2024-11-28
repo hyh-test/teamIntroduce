@@ -10,10 +10,10 @@ item smiluation
 - **Description**: 새로운 사용자를 등록합니다.
 - **Request Body**:
     ```json
-    {
-      email: "user123",
-     password:"password123",
-     username: "username123"
+     {
+        "email": "user123",
+        "password": "password123"
+        "username": "username123"
     }
     ```
 - **Response**: 사용자 등록 성공 시 상태 코드 `201 Created` 반환.
@@ -168,7 +168,9 @@ item smiluation
 - **Request Body**:
     ```json
     {
-        "itemId": 1
+        "itemId": 1,
+        "quantity": 1
+
     }
     ```
 - **Response**: 구매한 아이템 정보 반환.
@@ -185,7 +187,9 @@ item smiluation
 - **Request Body**:
     ```json
     {
-        "itemId": 1
+        "itemId": 1,
+        "quantity": 1
+
     }
     ```
 - **Response**: 판매된 아이템 정보 반환.
